@@ -1,5 +1,5 @@
 #This is the script that generate random integer & string
-fp=open("File2.txt","w") #output file to store console output
+fp=open("File2.txt","w") #output file to store console outputs
 
 import random #For random function
 import string  #for string uses
