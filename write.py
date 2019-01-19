@@ -1,4 +1,4 @@
-#Program To generate random integer & string
+#This is the script that generate random integer & string
 fp=open("File2.txt","w") #output file to store console output
 
 import random #For random function
