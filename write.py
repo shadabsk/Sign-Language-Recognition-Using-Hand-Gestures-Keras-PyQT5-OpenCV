@@ -16,7 +16,7 @@ n=int(input("Enter number of elements:"))
 
 for j in range(n):
     #a.append(random.choice(string.strs))
-    a.append(random.randint(60,98))
+    a.append(random.randint(3,98))
 
 print(a) #print random data as list
 
