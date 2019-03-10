@@ -77,6 +77,8 @@ cam = cv2.VideoCapture(0)
 
 cv2.namedWindow("Trackbars")
 
+cv2.moveWindow("Trackbars",700,30)
+
 cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
 cv2.createTrackbar("L - S", "Trackbars", 0, 255, nothing)
 cv2.createTrackbar("L - V", "Trackbars", 0, 255, nothing)
@@ -84,8 +86,9 @@ cv2.createTrackbar("U - H", "Trackbars", 179, 179, nothing)
 cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
 cv2.createTrackbar("U - V", "Trackbars", 255, 255, nothing)
 
-cv2.namedWindow("ASL Recognition")
+cv2.namedWindow("ASL Scanning Window")
 
+    
 img_text = ''
 while True:
     ret, frame = cam.read()
@@ -105,11 +108,16 @@ while True:
     imcrop = img[102:298, 427:623]
     hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    
-    cv2.putText(frame, img_text, (30, 400), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 0))
-    cv2.imshow("ASL Recognition", frame)
+    cv2.imshow("ASL Scanning Window", frame)
     cv2.imshow("mask", mask)
-        
+    cv2.moveWindow("mask", 1050,30)
+    
+    img1 = np.zeros((400,400,4), np.uint8)
+    #if cv2.waitKey(1) == ord('c'):
+    cv2.putText(img1, img_text, (160, 220), cv2.FONT_HERSHEY_TRIPLEX, 3.5, (0, 255, 0))
+    cv2.imshow("Output Window", img1)     
+    cv2.moveWindow("Output Window", 800,300)
+    
     img_name = "1.png"
     save_img = cv2.resize(mask, (image_x, image_y))
     cv2.imwrite(img_name, save_img)
