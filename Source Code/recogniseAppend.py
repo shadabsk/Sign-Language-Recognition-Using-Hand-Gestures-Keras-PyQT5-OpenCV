@@ -90,6 +90,7 @@ cv2.namedWindow("ASL Scanning Window")
 
     
 img_text = ''
+img_text1 = ''
 append_text=''
 finalBuffer=[]
 x=0
@@ -121,8 +122,19 @@ while True:
     
     img1 = np.zeros((100,500,4), np.uint8)
     img2 = np.zeros((400,400,4), np.uint8)
+    img3 = np.zeros((400,400,4), np.uint8)
+    cv2.putText(img3, img_text, (160, 220), cv2.FONT_HERSHEY_TRIPLEX, 3.5, (0, 255, 0))
+    cv2.imshow("Scanned Window", img3)
+    cv2.moveWindow("Scanned Window", 900,300)
+    img_name = "1.png"
+    save_img = cv2.resize(mask, (image_x, image_y))
+    cv2.imwrite(img_name, save_img)
+    img_text=predictor()
     if cv2.waitKey(1) == ord('c'):
-      cv2.putText(img1, img_text, (5, 30), cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0, 255, 0))
+      try:
+        append_text+=img_text
+      except:
+        append_text+=''
       cv2.putText(img1, append_text, (1, 10), cv2.FONT_HERSHEY_TRIPLEX, 0.5, (0, 255, 0))
       try:
         y=0
@@ -133,26 +145,17 @@ while True:
         pass
       cv2.imshow("Freezing Window", img1)     
       cv2.imshow("Output Window", img2)
-      cv2.moveWindow("Freezing Window", 800,300)
-      cv2.moveWindow("Output Window", 800,400)
       
-      img_name = "1.png"
-      save_img = cv2.resize(mask, (image_x, image_y))
-      cv2.imwrite(img_name, save_img)
-      img_text = predictor()
-      try:
-        append_text+=img_text
-      except:
-        append_text+=''
       if(len(append_text)>25):
         finalBuffer.append(append_text)
         print(finalBuffer[z])
         append_text=''
         z+=1
+        
 
     if cv2.waitKey(1) == 27:
         break
-
+	    
 
 cam.release()
 cv2.destroyAllWindows()
