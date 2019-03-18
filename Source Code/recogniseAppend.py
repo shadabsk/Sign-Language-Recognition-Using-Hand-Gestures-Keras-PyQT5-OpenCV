@@ -154,7 +154,12 @@ while True:
         
 
     if cv2.waitKey(1) == 27:
-        break
+    	f=open("temp.txt","w")
+    	for i in finalBuffer:
+    		f.write(i)
+    	f.close()
+    	
+    	break
 	    
 
 cam.release()
