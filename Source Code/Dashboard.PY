@@ -1,6 +1,10 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtCore import QUrl 
+from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QImage
+from PyQt5.QtGui import QPixmap
+
+from PyQt5.QtCore import QTimer 
 from tkinter import filedialog
 from tkinter import * 
 import tkinter as tk
@@ -17,6 +21,16 @@ image_x, image_y = 64,64
 
 from keras.models import load_model
 classifier = load_model('ASLModel.h5')
+
+
+def controlTimer(self):
+	# if timer is stopped
+	self.timer.isActive()
+		# create video capture
+	self.cam = cv2.VideoCapture(0)
+		# start timer
+	self.timer.start(20)
+            
 
 def predictor():
 	import numpy as np
@@ -94,11 +108,15 @@ class Dashboard(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(Dashboard, self).__init__()
 		uic.loadUi('UI_Files/dash.ui', self)
+		self.timer = QTimer()
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
-		self.scan_sinlge.clicked.connect(self.scanSingle)
-
+		if(self.scan_sinlge.clicked.connect(self.scanSingle)==True):
+			self.timer.timeout.connect(self.scanSingle)
+		
+		controlTimer(self)
+		
 	def createGest(self):
 		#runpy.run_path("CreateGest.py")
 		uic.loadUi('UI_Files/create_gest.ui', self)
@@ -139,27 +157,21 @@ class Dashboard(QtWidgets.QMainWindow):
 		uic.loadUi('UI_Files/scan_sent.ui', self)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
-		self.scan_sen.clicked.connect(self.scanSent)
+		if(self.scan_sen.clicked.connect(self.scanSent)):
+			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
 		
-
-		cam = cv2.VideoCapture(0)
-
 		cv2.namedWindow("Trackbars")
 
-		cv2.moveWindow("Trackbars",700,30)
-		cv2.resizeWindow("Trackbars",300,200)
+		cv2.moveWindow("Trackbars",0,50)
+		cv2.resizeWindow("Trackbars",270,250)
 		
 		cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
 		cv2.createTrackbar("L - S", "Trackbars", 0, 255, nothing)
 		cv2.createTrackbar("L - V", "Trackbars", 0, 255, nothing)
 		cv2.createTrackbar("U - H", "Trackbars", 179, 179, nothing)
 		cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
-		cv2.createTrackbar("U - V", "Trackbars", 146, 255, nothing)
-
-		cv2.namedWindow("ASL Scanning Window")
-		cv2.resizeWindow("ASL Scanning Window",270,200)
-			
+		cv2.createTrackbar("U - V", "Trackbars", 166, 255, nothing)	
 		img_text = ''
 		img_text1 = ''
 		append_text=''
@@ -170,43 +182,49 @@ class Dashboard(QtWidgets.QMainWindow):
 		z=0
 
 		while True:
-			ret, frame = cam.read()
+			ret, frame =self.cam.read()
 			frame = cv2.flip(frame,1)
 			
-			frame=cv2.resize(frame,(270,200))
+			frame=cv2.resize(frame,(331,301))
 			
-			cv2.moveWindow("ASL Scanning Window", 350,270)
 			l_h = cv2.getTrackbarPos("L - H", "Trackbars")
 			l_s = cv2.getTrackbarPos("L - S", "Trackbars")
 			l_v = cv2.getTrackbarPos("L - V", "Trackbars")
 			u_h = cv2.getTrackbarPos("U - H", "Trackbars")
 			u_s = cv2.getTrackbarPos("U - S", "Trackbars")
 			u_v = cv2.getTrackbarPos("U - V", "Trackbars")
+			
+			frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+			img = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
 
-
-			img = cv2.rectangle(frame, (150,30),(260,150), (0,255,0), thickness=2, lineType=8, shift=0)
+			height, width, channel = img.shape
+			step = channel * width
+        # create QImage from image
+			qImg = QImage(img.data, width, height, step, QImage.Format_RGB888)
+        # show image in img_label
+			self.label_3.setPixmap(QPixmap.fromImage(qImg))
 
 			lower_blue = np.array([l_h, l_s, l_v])
 			upper_blue = np.array([u_h, u_s, u_v])
-			imcrop = img[20:170, 130:350]
+			imcrop = img[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
-			mask = cv2.inRange(hsv, lower_blue, upper_blue)
-			cv2.imshow("ASL Scanning Window", frame)
-			cv2.imshow("mask", mask)
-			cv2.moveWindow("mask", 1050,30)
+			mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
+			
+			cv2.resizeWindow("mask1",165,115)
+			cv2.imshow("mask1", mask1)
+			cv2.moveWindow("mask1", 695,250)
 			
 			self.textBrowser.setText(img_text)
 			img_name = "1.png"
-			save_img = cv2.resize(mask, (image_x, image_y))
+			save_img = cv2.resize(mask1, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
 			img_text=predictor()
 			if cv2.waitKey(1) == ord('c'):
-					self.textBrowser_3.setText(img_text)
 					try:
 						append_text+=img_text
 					except:
 						append_text+=''
-					self.textBrowser_2.setText(append_text)
+					self.textBrowser_3.setText(append_text)
 					try:
 						y=0
 						for x in range(len(finalBuffer)):
@@ -231,7 +249,7 @@ class Dashboard(QtWidgets.QMainWindow):
 				break
 				
 
-		cam.release()
+		self.cam.release()
 		cv2.destroyAllWindows()
 
 	def scanSingle(self):
@@ -239,11 +257,13 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
-		self.scan_sinlge.clicked.connect(self.scanSingle)
+		if(self.scan_sinlge.clicked.connect(self.scanSingle)):
+			controlTimer(self)
 
-		cam = cv2.VideoCapture(0)
 		cv2.namedWindow("Trackbars")
-		cv2.moveWindow("Trackbars",1000,30)
+		cv2.moveWindow("Trackbars",0,50)
+		cv2.resizeWindow("Trackbars",255,250)
+			
 		cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
 		cv2.createTrackbar("L - S", "Trackbars", 0, 255, nothing)
 		cv2.createTrackbar("L - V", "Trackbars", 0, 255, nothing)
@@ -251,36 +271,37 @@ class Dashboard(QtWidgets.QMainWindow):
 		cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
 		cv2.createTrackbar("U - V", "Trackbars", 156, 255, nothing)
 		
-		cv2.namedWindow("ASL Scanning Window")
-		cv2.resizeWindow("ASL Scanning Window",270,200)
 		img_text = ''
 		while True:
-			ret, frame = cam.read()
+			ret, frame = self.cam.read()
 			frame = cv2.flip(frame,1)
 			
-			frame=cv2.resize(frame,(270,200))
-			cv2.moveWindow("ASL Scanning Window", 350,270)
+			frame=cv2.resize(frame,(321,270))
 			l_h = cv2.getTrackbarPos("L - H", "Trackbars")
 			l_s = cv2.getTrackbarPos("L - S", "Trackbars")
 			l_v = cv2.getTrackbarPos("L - V", "Trackbars")
 			u_h = cv2.getTrackbarPos("U - H", "Trackbars")
 			u_s = cv2.getTrackbarPos("U - S", "Trackbars")
 			u_v = cv2.getTrackbarPos("U - V", "Trackbars")
+			frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+			img1 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
 
-
-			img = cv2.rectangle(frame, (150,30),(260,150), (0,255,0), thickness=2, lineType=8, shift=0)
+			height1, width1, channel1 = img1.shape
+			step1 = channel1 * width1
+        # create QImage from image
+			qImg1 = QImage(img1.data, width1, height1, step1, QImage.Format_RGB888)
+        # show image in img_label
+			self.label_3.setPixmap(QPixmap.fromImage(qImg1))
 
 			lower_blue = np.array([l_h, l_s, l_v])
 			upper_blue = np.array([u_h, u_s, u_v])
-			imcrop = img[20:170, 130:350]
+			imcrop = img1[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
-			cv2.imshow("ASL Scanning Window", frame)
 			cv2.imshow("mask", mask)
-			
-			cv2.resizeWindow("mask",140,140)
-			cv2.moveWindow("mask", 710,270)
-			self.textBrowser_2.setText("\t\t    "+str(img_text))
+			cv2.resizeWindow("mask",140,130)
+			cv2.moveWindow("mask", 870,250)
+			self.textBrowser.setText("\n\n\t"+str(img_text))
 			img_name = "1.png"
 			save_img = cv2.resize(mask, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
@@ -291,7 +312,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			    break
 
 
-		cam.release()
+		self.cam.release()
 		cv2.destroyAllWindows()
 
 app = QtWidgets.QApplication([])
