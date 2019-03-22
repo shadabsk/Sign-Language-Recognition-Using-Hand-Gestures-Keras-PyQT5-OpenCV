@@ -60,10 +60,10 @@ border: 2px solid white; border-radius:10px;</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>390</x>
       <y>210</y>
       <width>331</width>
-      <height>271</height>
+      <height>301</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -84,30 +84,11 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8.25pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>500</y>
-      <width>91</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white;
-font: 16pt &quot;Times New Roman&quot;;
-color: black;
-border: 2px solid #4ba1df; border-radius:20px;</string>
-    </property>
-    <property name="text">
-     <string>Save</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>500</y>
+      <x>500</x>
+      <y>530</y>
       <width>91</width>
       <height>41</height>
      </rect>
@@ -142,7 +123,7 @@ border: 2px solid #4ba1df; border-radius:20px;</string>
    <widget class="QPushButton" name="scan_sen">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>380</x>
       <y>70</y>
       <width>171</width>
       <height>61</height>
@@ -319,8 +300,8 @@ background-repeat:none;</string>
      <rect>
       <x>40</x>
       <y>210</y>
-      <width>321</width>
-      <height>271</height>
+      <width>331</width>
+      <height>301</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -333,31 +314,12 @@ color:white;
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>210</y>
-      <width>141</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border: 5px solid #4ba1df;
-font-size: 40px;
-color:white;
-</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>490</y>
-      <width>321</width>
+      <y>530</y>
+      <width>331</width>
       <height>51</height>
      </rect>
     </property>
@@ -369,6 +331,51 @@ color:white;
     </property>
     <property name="text">
      <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="trackbar">
+    <property name="geometry">
+     <rect>
+      <x>59</x>
+      <y>539</y>
+      <width>291</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="maximum">
+     <number>255</number>
+    </property>
+    <property name="singleStep">
+     <number>1</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+    <property name="invertedControls">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="graphicsView_2">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>210</y>
+      <width>151</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border: 5px solid #4ba1df;
+background-color:black;
+font-size: 40px;
+color:white;
+</string>
     </property>
    </widget>
   </widget>
