@@ -32,6 +32,14 @@ def clearfunc(cam):
 	cam.release()
 	cv2.destroyAllWindows()
 
+def saveBuff(cam,finalBuffer):
+	cam.release()
+	cv2.destroyAllWindows()
+	f=open("temp.txt","w")
+	for i in finalBuffer:
+		f.write(i)
+	f.close()
+
 
 def controlTimer(self):
 	# if timer is stopped
@@ -186,6 +194,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		img_text = ''
 		img_text1 = ''
 		append_text=''
+		new_text=''
 		finalBuffer=[]
 		x=0
 		y=0
@@ -241,24 +250,29 @@ class Dashboard(QtWidgets.QMainWindow):
 			if cv2.waitKey(1) == ord('c'):
 					try:
 						append_text+=img_text
+						new_text+=img_text
 					except:
 						append_text+=''
-					self.textBrowser_3.setText(append_text)
-					try:
+					self.textBrowser_4.setText(new_text)
+					'''try:
 						y=0
 						for x in range(len(finalBuffer)):
 							self.textBrowser_4.setText(finalBuffer[x])
 							y+=20
 					except:
-						pass
+						pass'''
 					
-					if(len(append_text)>25):
+					if(len(append_text)>1):
 						finalBuffer.append(append_text)
-						print(finalBuffer[z])
 						append_text=''
-						z+=1
+					else:
+						finalBuffer.append(append_text)
+						append_text=''
 					 
-
+			try:
+				self.pushButton.clicked.connect(lambda:saveBuff(self.cam,finalBuffer))
+			except:
+				pass
 			if cv2.waitKey(1) == 27:
 				f=open("temp.txt","w")
 				for i in finalBuffer:
@@ -267,7 +281,6 @@ class Dashboard(QtWidgets.QMainWindow):
 				
 				break
 				
-
 		self.cam.release()
 		cv2.destroyAllWindows()
 
