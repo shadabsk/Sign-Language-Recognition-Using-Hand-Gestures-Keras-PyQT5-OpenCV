@@ -13,7 +13,6 @@ import os
 import runpy
 import cv2
 import numpy as np
-
 def nothing(x):
 	pass
 
@@ -21,6 +20,11 @@ image_x, image_y = 64,64
 
 from keras.models import load_model
 classifier = load_model('ASLModel.h5')
+import keyboard
+
+def clearfunc(cam):
+	cam.release()
+	cv2.destroyAllWindows()
 
 
 def controlTimer(self):
@@ -270,21 +274,23 @@ class Dashboard(QtWidgets.QMainWindow):
 		cv2.createTrackbar("U - H", "Trackbars", 179, 179, nothing)
 		cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
 		cv2.createTrackbar("U - V", "Trackbars", 156, 255, nothing)
-		
+		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
 		img_text = ''
 		while True:
 			ret, frame = self.cam.read()
 			frame = cv2.flip(frame,1)
-			
-			frame=cv2.resize(frame,(321,270))
-			l_h = cv2.getTrackbarPos("L - H", "Trackbars")
-			l_s = cv2.getTrackbarPos("L - S", "Trackbars")
-			l_v = cv2.getTrackbarPos("L - V", "Trackbars")
-			u_h = cv2.getTrackbarPos("U - H", "Trackbars")
-			u_s = cv2.getTrackbarPos("U - S", "Trackbars")
-			u_v = cv2.getTrackbarPos("U - V", "Trackbars")
-			frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-			img1 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
+			try:
+				frame=cv2.resize(frame,(321,270))
+				l_h = cv2.getTrackbarPos("L - H", "Trackbars")
+				l_s = cv2.getTrackbarPos("L - S", "Trackbars")
+				l_v = cv2.getTrackbarPos("L - V", "Trackbars")
+				u_h = cv2.getTrackbarPos("U - H", "Trackbars")
+				u_s = cv2.getTrackbarPos("U - S", "Trackbars")
+				u_v = cv2.getTrackbarPos("U - V", "Trackbars")
+				frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+				img1 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
+			except:
+				keyboard.press_and_release('esc')
 
 			height1, width1, channel1 = img1.shape
 			step1 = channel1 * width1
@@ -306,7 +312,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			save_img = cv2.resize(mask, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
 			img_text = predictor()
-			    
+				
 
 			if cv2.waitKey(1) == 27:
 			    break
@@ -314,6 +320,7 @@ class Dashboard(QtWidgets.QMainWindow):
 
 		self.cam.release()
 		cv2.destroyAllWindows()
+
 
 app = QtWidgets.QApplication([])
 win = Dashboard()
