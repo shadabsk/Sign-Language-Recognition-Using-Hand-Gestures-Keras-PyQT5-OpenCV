@@ -130,7 +130,7 @@ border: 2px solid #4ba1df; border-radius:20px;</string>
    <widget class="QPushButton" name="scan_sen">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>380</x>
       <y>70</y>
       <width>171</width>
       <height>61</height>
