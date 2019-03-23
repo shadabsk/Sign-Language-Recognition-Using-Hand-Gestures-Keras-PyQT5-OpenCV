@@ -3,8 +3,9 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
-
-from PyQt5.QtCore import QTimer 
+from scipy.ndimage import imread
+from PyQt5.QtCore import QTimer,Qt 
+from PyQt5 import QtGui
 from tkinter import filedialog
 from tkinter import * 
 import tkinter as tk
@@ -13,6 +14,11 @@ import os
 import runpy
 import cv2
 import numpy as np
+import qimage2ndarray
+
+
+
+
 def nothing(x):
 	pass
 
@@ -158,24 +164,17 @@ class Dashboard(QtWidgets.QMainWindow):
 
 
 	def scanSent(self):
+		try:
+			clearfunc(self.cam)
+		except:
+			pass
 		uic.loadUi('UI_Files/scan_sent.ui', self)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
-		self.scan_sinlge.clicked.connect(self.scanSingle)
-		
-		cv2.namedWindow("Trackbars")
-
-		cv2.moveWindow("Trackbars",0,50)
-		cv2.resizeWindow("Trackbars",270,250)
-		
-		cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
-		cv2.createTrackbar("L - S", "Trackbars", 0, 255, nothing)
-		cv2.createTrackbar("L - V", "Trackbars", 0, 255, nothing)
-		cv2.createTrackbar("U - H", "Trackbars", 179, 179, nothing)
-		cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
-		cv2.createTrackbar("U - V", "Trackbars", 166, 255, nothing)	
+		self.scan_sinlge.clicked.connect(self.scanSingle)	
+		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
 		img_text = ''
 		img_text1 = ''
 		append_text=''
@@ -188,18 +187,16 @@ class Dashboard(QtWidgets.QMainWindow):
 		while True:
 			ret, frame =self.cam.read()
 			frame = cv2.flip(frame,1)
+			try:
+				frame=cv2.resize(frame,(331,310))
 			
-			frame=cv2.resize(frame,(331,301))
 			
-			l_h = cv2.getTrackbarPos("L - H", "Trackbars")
-			l_s = cv2.getTrackbarPos("L - S", "Trackbars")
-			l_v = cv2.getTrackbarPos("L - V", "Trackbars")
-			u_h = cv2.getTrackbarPos("U - H", "Trackbars")
-			u_s = cv2.getTrackbarPos("U - S", "Trackbars")
-			u_v = cv2.getTrackbarPos("U - V", "Trackbars")
-			
-			frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-			img = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
+				frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+				img = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
+			except:
+				keyboard.press_and_release('esc')
+				keyboard.press_and_release('esc')
+				keyboard.press_and_release('esc')
 
 			height, width, channel = img.shape
 			step = channel * width
@@ -207,16 +204,23 @@ class Dashboard(QtWidgets.QMainWindow):
 			qImg = QImage(img.data, width, height, step, QImage.Format_RGB888)
         # show image in img_label
 			self.label_3.setPixmap(QPixmap.fromImage(qImg))
+			slider=self.trackbar.value()
+				
+			lower_blue = np.array([0, 0, 0])
+			upper_blue = np.array([179, 255, slider])
 
-			lower_blue = np.array([l_h, l_s, l_v])
-			upper_blue = np.array([u_h, u_s, u_v])
 			imcrop = img[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			cv2.resizeWindow("mask1",165,115)
-			cv2.imshow("mask1", mask1)
-			cv2.moveWindow("mask1", 695,250)
+			image = cv2.imread('template.png')
+			cv2.imshow("Image",image)
+			cv2.moveWindow("Image", 1030,150)
+			
+			cv2.imshow("mask", mask1)
+			cv2.resizeWindow("mask",140,130)
+			cv2.moveWindow("mask", 1050,10)
+
 			
 			self.textBrowser.setText(img_text)
 			img_name = "1.png"
@@ -257,23 +261,22 @@ class Dashboard(QtWidgets.QMainWindow):
 		cv2.destroyAllWindows()
 
 	def scanSingle(self):
+		try:
+			clearfunc(self.cam)
+		except:
+			pass
 		uic.loadUi('UI_Files/scan_single.ui', self)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
 		if(self.scan_sinlge.clicked.connect(self.scanSingle)):
 			controlTimer(self)
-
-		cv2.namedWindow("Trackbars")
-		cv2.moveWindow("Trackbars",0,50)
-		cv2.resizeWindow("Trackbars",255,250)
-			
-		cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
+		'''cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
 		cv2.createTrackbar("L - S", "Trackbars", 0, 255, nothing)
 		cv2.createTrackbar("L - V", "Trackbars", 0, 255, nothing)
 		cv2.createTrackbar("U - H", "Trackbars", 179, 179, nothing)
 		cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
-		cv2.createTrackbar("U - V", "Trackbars", 156, 255, nothing)
+		cv2.createTrackbar("U - V", "Trackbars", 156, 255, nothing)'''
 		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
 		img_text = ''
 		while True:
@@ -281,32 +284,41 @@ class Dashboard(QtWidgets.QMainWindow):
 			frame = cv2.flip(frame,1)
 			try:
 				frame=cv2.resize(frame,(321,270))
-				l_h = cv2.getTrackbarPos("L - H", "Trackbars")
+				'''l_h = cv2.getTrackbarPos("L - H", "Trackbars")
 				l_s = cv2.getTrackbarPos("L - S", "Trackbars")
 				l_v = cv2.getTrackbarPos("L - V", "Trackbars")
 				u_h = cv2.getTrackbarPos("U - H", "Trackbars")
 				u_s = cv2.getTrackbarPos("U - S", "Trackbars")
-				u_v = cv2.getTrackbarPos("U - V", "Trackbars")
+				u_v = cv2.getTrackbarPos("U - V", "Trackbars")'''
 				frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 				img1 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
 			except:
 				keyboard.press_and_release('esc')
 
+			slider=self.trackbar.value()
 			height1, width1, channel1 = img1.shape
 			step1 = channel1 * width1
         # create QImage from image
 			qImg1 = QImage(img1.data, width1, height1, step1, QImage.Format_RGB888)
         # show image in img_label
+
 			self.label_3.setPixmap(QPixmap.fromImage(qImg1))
 
-			lower_blue = np.array([l_h, l_s, l_v])
-			upper_blue = np.array([u_h, u_s, u_v])
+			lower_blue = np.array([0, 0, 0])
+			upper_blue = np.array([179, 255, slider])
+			
 			imcrop = img1[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
+			
+			image = cv2.imread('template.png')
+			cv2.imshow("Image",image)
+			cv2.moveWindow("Image", 1030,150)
+			
 			cv2.imshow("mask", mask)
 			cv2.resizeWindow("mask",140,130)
-			cv2.moveWindow("mask", 870,250)
+			cv2.moveWindow("mask", 1050,10)
+			
 			self.textBrowser.setText("\n\n\t"+str(img_text))
 			img_name = "1.png"
 			save_img = cv2.resize(mask, (image_x, image_y))
@@ -326,5 +338,3 @@ app = QtWidgets.QApplication([])
 win = Dashboard()
 win.show()
 sys.exit(app.exec())
-
- 
