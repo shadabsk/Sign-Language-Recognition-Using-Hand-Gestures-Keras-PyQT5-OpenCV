@@ -128,6 +128,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		#controlTimer(self)
 		
 	def createGest(self):
+		try:
+			clearfunc(self.cam)
+		except:
+			pass
 		#runpy.run_path("CreateGest.py")
 		uic.loadUi('UI_Files/create_gest.ui', self)
 		self.create.clicked.connect(self.createGest)
@@ -137,6 +141,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		#self.close()
 
 	def exportFile(self):
+		try:
+			clearfunc(self.cam)
+		except:
+			pass
 		uic.loadUi('UI_Files/export.ui', self)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
@@ -203,8 +211,11 @@ class Dashboard(QtWidgets.QMainWindow):
         # create QImage from image
 			qImg = QImage(img.data, width, height, step, QImage.Format_RGB888)
         # show image in img_label
-			self.label_3.setPixmap(QPixmap.fromImage(qImg))
-			slider=self.trackbar.value()
+			try:
+				self.label_3.setPixmap(QPixmap.fromImage(qImg))
+				slider=self.trackbar.value()
+			except:
+				pass
 				
 			lower_blue = np.array([0, 0, 0])
 			upper_blue = np.array([179, 255, slider])
@@ -295,17 +306,19 @@ class Dashboard(QtWidgets.QMainWindow):
 			except:
 				keyboard.press_and_release('esc')
 
-			slider=self.trackbar.value()
 			height1, width1, channel1 = img1.shape
 			step1 = channel1 * width1
         # create QImage from image
 			qImg1 = QImage(img1.data, width1, height1, step1, QImage.Format_RGB888)
         # show image in img_label
-
-			self.label_3.setPixmap(QPixmap.fromImage(qImg1))
+			try:
+				self.label_3.setPixmap(QPixmap.fromImage(qImg1))
+				slider1=self.trackbar.value()
+			except:
+				pass
 
 			lower_blue = np.array([0, 0, 0])
-			upper_blue = np.array([179, 255, slider])
+			upper_blue = np.array([179, 255, slider1])
 			
 			imcrop = img1[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
