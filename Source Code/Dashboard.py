@@ -43,6 +43,17 @@ def saveBuff(cam,finalBuffer):
 		f.write(i)
 	f.close()
 
+def capture_images(cam,saveimg,mask):
+	cam.release()
+	cv2.destroyAllWindows()
+	if not os.path.exists('./SampleGestures'):
+		os.mkdir('./SampleGestures')
+
+	gesname=saveimg[-1]
+	img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
+	save_img = cv2.resize(mask, (image_x, image_y))
+	cv2.imwrite(img_name, save_img)
+
 
 def controlTimer(self):
 	# if timer is stopped
@@ -153,6 +164,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
 		self.plainTextEdit.setPlaceholderText("Enter Gesture Name Here") 
 		img_text = ''
+		saveimg=[]
 		while True:
 			ret, frame = self.cam.read()
 			frame = cv2.flip(frame,1)
@@ -198,8 +210,18 @@ class Dashboard(QtWidgets.QMainWindow):
 			hwnd = winGuiAuto.findTopWindow("mask")
 			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 
+			ges_name = self.plainTextEdit.toPlainText()
+
+			if(len(ges_name)>1):
+				saveimg.append(ges_name)
+				ges_name=''
+			else:
+				saveimg.append(ges_name)
+				ges_name=''
+
+
 			try:
-				self.pushButton.clicked.connect(lambda:saveBuff(self.cam,finalBuffer))
+				self.pushButton.clicked.connect(lambda:capture_images(self.cam,saveimg,mask))
 			except:
 				pass			
 				
@@ -209,6 +231,14 @@ class Dashboard(QtWidgets.QMainWindow):
 
 		self.cam.release()
 		cv2.destroyAllWindows()
+		if not os.path.exists('./SampleGestures'):
+			os.mkdir('./SampleGestures')
+
+		gesname=saveimg[-1]
+		img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
+		save_img = cv2.resize(mask, (image_x, image_y))
+		cv2.imwrite(img_name, save_img)
+
 		#self.close()
 
 	def exportFile(self):
