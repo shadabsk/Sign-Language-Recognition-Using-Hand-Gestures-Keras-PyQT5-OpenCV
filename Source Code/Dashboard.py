@@ -31,10 +31,12 @@ image_x, image_y = 64,64
 from keras.models import load_model
 classifier = load_model('ASLModel.h5')
 
-fileEntry=[]
-for file in os.listdir("SampleGestures"):
-    if file.endswith(".png"):
-    	fileEntry.append(file)
+def fileSearch():
+	fileEntry=[]
+	for file in os.listdir("SampleGestures"):
+	    if file.endswith(".png"):
+	    	fileEntry.append(file)
+	return fileEntry
 
 def clearfunc(cam):
 	cam.release()
@@ -80,7 +82,7 @@ def predictor():
 	test_image = np.expand_dims(test_image, axis = 0)
 	result = classifier.predict(test_image)
 	gesname=''
-
+	fileEntry=fileSearch()
 	image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[0])
 	original = cv2.imread("1.png")
 	sift = cv2.xfeatures2d.SIFT_create()
@@ -473,7 +475,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		cv2.destroyAllWindows()
 
 		if os.path.exists('temp.txt'):
-			QtWidgets.QMessageBox.about(self, "Information", "File saved successfully!")
+			QtWidgets.QMessageBox.about(self, "Information", "File is temporarily saved ... you can now proceed to export")
 			self.textBrowser.setText("		 ")
 
 	def scanSingle(self):
