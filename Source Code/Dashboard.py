@@ -364,9 +364,14 @@ class Dashboard(QtWidgets.QMainWindow):
 			cv2.imshow("Image",image)
 			cv2.moveWindow("Image", 1030,150)
 			
+			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask1)
-			cv2.resizeWindow("mask",140,130)
-			cv2.moveWindow("mask", 1050,10)
+			cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("mask",118,108)
+			cv2.moveWindow("mask", 905,271)
+
+			hwnd = winGuiAuto.findTopWindow("mask")
+			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 
 			
 			self.textBrowser.setText(img_text)
@@ -456,9 +461,14 @@ class Dashboard(QtWidgets.QMainWindow):
 			cv2.imshow("Image",image)
 			cv2.moveWindow("Image", 1030,150)
 			
+			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask)
-			cv2.resizeWindow("mask",140,130)
-			cv2.moveWindow("mask", 1050,10)
+			cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("mask",118,108)
+			cv2.moveWindow("mask", 894,271)
+
+			hwnd = winGuiAuto.findTopWindow("mask")
+			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 			
 			self.textBrowser.setText("\n\n\t"+str(img_text))
 			img_name = "1.png"
