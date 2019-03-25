@@ -15,7 +15,10 @@ import runpy
 import cv2
 import numpy as np
 import qimage2ndarray
-
+import win32api
+import winGuiAuto
+import win32gui
+import win32con
 
 
 
@@ -144,8 +147,68 @@ class Dashboard(QtWidgets.QMainWindow):
 		uic.loadUi('UI_Files/create_gest.ui', self)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
-		self.scan_sen.clicked.connect(self.scanSent)
-		self.scan_sinlge.clicked.connect(self.scanSingle)
+		if(self.scan_sen.clicked.connect(self.scanSent)):
+			controlTimer(self)
+		self.scan_sinlge.clicked.connect(self.scanSingle)	
+		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
+		self.plainTextEdit.setPlaceholderText("Enter Gesture Name Here") 
+		img_text = ''
+		while True:
+			ret, frame = self.cam.read()
+			frame = cv2.flip(frame,1)
+			try:
+				frame=cv2.resize(frame,(321,270))
+				frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+				img2 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
+			except:
+				keyboard.press_and_release('esc')
+
+			height2, width2, channel2 = img2.shape
+			step2 = channel2 * width2
+        # create QImage from image
+			qImg2 = QImage(img2.data, width2, height2, step2, QImage.Format_RGB888)
+        # show image in img_label
+			try:
+				self.label_3.setPixmap(QPixmap.fromImage(qImg2))
+				slider2=self.trackbar.value()
+			except:
+				pass
+
+			lower_blue = np.array([0, 0, 0])
+			upper_blue = np.array([179, 255, slider2])
+			
+			imcrop = img2[52:198, 152:298]
+			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
+			mask = cv2.inRange(hsv, lower_blue, upper_blue)
+			
+			cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
+			image = cv2.imread('template.png')
+			cv2.imshow("Image",image)
+			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("Image",298,430)
+			cv2.moveWindow("Image", 1052,214)
+
+
+			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
+			cv2.imshow("mask", mask)
+			cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("mask",140,160)
+			cv2.moveWindow("mask", 764,271)
+
+			hwnd = winGuiAuto.findTopWindow("mask")
+			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
+
+			try:
+				self.pushButton.clicked.connect(lambda:saveBuff(self.cam,finalBuffer))
+			except:
+				pass			
+				
+			if cv2.waitKey(1) == 27:
+			    break
+
+
+		self.cam.release()
+		cv2.destroyAllWindows()
 		#self.close()
 
 	def exportFile(self):
