@@ -19,6 +19,7 @@ import win32api
 import winGuiAuto
 import win32gui
 import win32con
+import keyboard
 
 
 
@@ -29,7 +30,11 @@ image_x, image_y = 64,64
 
 from keras.models import load_model
 classifier = load_model('ASLModel.h5')
-import keyboard
+
+fileEntry=[]
+for file in os.listdir("SampleGestures"):
+    if file.endswith(".png"):
+    	fileEntry.append(file)
 
 def clearfunc(cam):
 	cam.release()
@@ -71,8 +76,32 @@ def predictor():
 	test_image = image.img_to_array(test_image)
 	test_image = np.expand_dims(test_image, axis = 0)
 	result = classifier.predict(test_image)
+	gesname=''
 
-	if result[0][0] == 1:
+	image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[0])
+	original = cv2.imread("1.png")
+	sift = cv2.xfeatures2d.SIFT_create()
+	kp_1, desc_1 = sift.detectAndCompute(original, None)
+	kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
+
+	index_params = dict(algorithm=0, trees=5)
+	search_params = dict()
+	flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+	matches = flann.knnMatch(desc_1, desc_2, k=2)
+
+	good_points = []
+	ratio = 0.6
+	for m, n in matches:
+	      if m.distance < ratio*n.distance:
+	             good_points.append(m)
+	#print(fileEntry[i])
+	if(abs(len(good_points)+len(matches))>20):
+		gesname=fileEntry[0]
+		gesname=gesname.replace('.png','')
+		return gesname
+
+	elif result[0][0] == 1:
 		  return 'A'
 	elif result[0][1] == 1:
 		  return 'B'
@@ -124,6 +153,8 @@ def predictor():
 		  return 'Y'
 	elif result[0][25] == 1:
 		  return 'Z'
+	#else:
+		#return 'None'
 			   
 
 def checkFile():
@@ -210,7 +241,10 @@ class Dashboard(QtWidgets.QMainWindow):
 			hwnd = winGuiAuto.findTopWindow("mask")
 			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 
-			ges_name = self.plainTextEdit.toPlainText()
+			try:
+				ges_name = self.plainTextEdit.toPlainText()
+			except:
+				pass
 
 			if(len(ges_name)>1):
 				saveimg.append(ges_name)
@@ -388,12 +422,6 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.clicked.connect(self.scanSent)
 		if(self.scan_sinlge.clicked.connect(self.scanSingle)):
 			controlTimer(self)
-		'''cv2.createTrackbar("L - H", "Trackbars", 0, 179, nothing)
-		cv2.createTrackbar("L - S", "Trackbars", 0, 255, nothing)
-		cv2.createTrackbar("L - V", "Trackbars", 0, 255, nothing)
-		cv2.createTrackbar("U - H", "Trackbars", 179, 179, nothing)
-		cv2.createTrackbar("U - S", "Trackbars", 255, 255, nothing)
-		cv2.createTrackbar("U - V", "Trackbars", 156, 255, nothing)'''
 		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
 		img_text = ''
 		while True:
@@ -401,12 +429,6 @@ class Dashboard(QtWidgets.QMainWindow):
 			frame = cv2.flip(frame,1)
 			try:
 				frame=cv2.resize(frame,(321,270))
-				'''l_h = cv2.getTrackbarPos("L - H", "Trackbars")
-				l_s = cv2.getTrackbarPos("L - S", "Trackbars")
-				l_v = cv2.getTrackbarPos("L - V", "Trackbars")
-				u_h = cv2.getTrackbarPos("U - H", "Trackbars")
-				u_s = cv2.getTrackbarPos("U - S", "Trackbars")
-				u_v = cv2.getTrackbarPos("U - V", "Trackbars")'''
 				frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 				img1 = cv2.rectangle(frame, (150,50),(300,200), (0,255,0), thickness=2, lineType=8, shift=0)
 			except:

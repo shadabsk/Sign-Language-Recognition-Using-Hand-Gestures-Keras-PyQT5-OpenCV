@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 def nothing(x):
     pass
@@ -10,9 +11,13 @@ from keras.models import load_model
 classifier = load_model('ASLModel.h5')
 
 #original = cv2.imread("5.png")
+fileEntry=[]
+for file in os.listdir("SampleGestures"):
+    if file.endswith(".png"):
+    	fileEntry.append(file)
 
 def imgprocessing():
-  image_to_compare = cv2.imread("SampleGest/0.png")
+  image_to_compare = cv2.imread("./SampleGestures/space.png")
   original = cv2.imread("1.png")
   sift = cv2.xfeatures2d.SIFT_create()
   kp_1, desc_1 = sift.detectAndCompute(original, None)
@@ -49,32 +54,33 @@ def predictor():
        test_image = image.img_to_array(test_image)
        test_image = np.expand_dims(test_image, axis = 0)
        result = classifier.predict(test_image)
-
-       image_to_compare = cv2.imread("0.png")
-       original = cv2.imread("1.png")
-       sift = cv2.xfeatures2d.SIFT_create()
-       kp_1, desc_1 = sift.detectAndCompute(original, None)
-       kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
-       
-       index_params = dict(algorithm=0, trees=5)
-       search_params = dict()
-       flann = cv2.FlannBasedMatcher(index_params, search_params)
-        
-       matches = flann.knnMatch(desc_1, desc_2, k=2)
-       
-       good_points = []
-       ratio = 0.6
-       for m, n in matches:
-              if m.distance < ratio*n.distance:
-                     good_points.append(m)
-
-       if(abs(len(good_points)+len(matches))>20):
-        return 'space'
+       for i in range(len(fileEntry)):
+	       image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[i])
+	       original = cv2.imread("1.png")
+	       sift = cv2.xfeatures2d.SIFT_create()
+	       kp_1, desc_1 = sift.detectAndCompute(original, None)
+	       kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
+	       
+	       index_params = dict(algorithm=0, trees=5)
+	       search_params = dict()
+	       flann = cv2.FlannBasedMatcher(index_params, search_params)
+	        
+	       matches = flann.knnMatch(desc_1, desc_2, k=2)
+	       
+	       good_points = []
+	       ratio = 0.6
+	       for m, n in matches:
+	              if m.distance < ratio*n.distance:
+	                     good_points.append(m)
+	       print(fileEntry[i])
+	       if(abs(len(good_points)+len(matches))>20):
+	       	gesname=fileEntry[i]
+	       	gesname=gesname.replace('.png','')
+	        return gesname
        #print(good_points)
        #if(abs(fin)<=2):
              # return 'space'
-       
-       elif result[0][0] == 1:
+       if result[0][0] == 1:
               return 'A'
        elif result[0][1] == 1:
               return 'B'
