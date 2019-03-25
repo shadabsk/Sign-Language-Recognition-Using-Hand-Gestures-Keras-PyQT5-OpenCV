@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>742</width>
+    <width>741</width>
     <height>642</height>
    </rect>
   </property>
@@ -14,27 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="dash">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>160</y>
-      <width>741</width>
-      <height>441</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:#fefefe;
-border: 5px solid #4ba1df;
-</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView_2">
     <property name="geometry">
      <rect>
@@ -227,20 +206,54 @@ background-repeat:none;</string>
      <string>Scan Sentence </string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>160</y>
+      <width>741</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+font-size: 40px;
+color:white;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="graphicsView">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>160</y>
+      <width>741</width>
+      <height>441</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:#fefefe;
+</string>
+    </property>
+   </widget>
    <zorder>graphicsView_2</zorder>
    <zorder>label</zorder>
    <zorder>create</zorder>
    <zorder>exp2</zorder>
    <zorder>scan_sen</zorder>
    <zorder>scan_sinlge</zorder>
-   <zorder>dash</zorder>
+   <zorder>label_3</zorder>
+   <zorder>graphicsView</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>742</width>
+     <width>741</width>
      <height>21</height>
     </rect>
    </property>

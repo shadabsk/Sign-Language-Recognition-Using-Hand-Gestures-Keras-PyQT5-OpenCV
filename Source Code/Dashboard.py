@@ -40,24 +40,27 @@ def clearfunc(cam):
 	cam.release()
 	cv2.destroyAllWindows()
 
-def saveBuff(cam,finalBuffer):
+def saveBuff(self,cam,finalBuffer):
 	cam.release()
 	cv2.destroyAllWindows()
-	f=open("temp.txt","w")
-	for i in finalBuffer:
-		f.write(i)
-	f.close()
+	if(len(finalBuffer)>=1):
+		f=open("temp.txt","w")
+		for i in finalBuffer:
+			f.write(i)
+		f.close()
 
-def capture_images(cam,saveimg,mask):
+
+def capture_images(self,cam,saveimg,mask):
 	cam.release()
 	cv2.destroyAllWindows()
 	if not os.path.exists('./SampleGestures'):
 		os.mkdir('./SampleGestures')
 
 	gesname=saveimg[-1]
-	img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
-	save_img = cv2.resize(mask, (image_x, image_y))
-	cv2.imwrite(img_name, save_img)
+	if(len(gesname)>=1):
+		img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
+		save_img = cv2.resize(mask, (image_x, image_y))
+		cv2.imwrite(img_name, save_img)
 
 
 def controlTimer(self):
@@ -170,6 +173,34 @@ def checkFile():
 class Dashboard(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(Dashboard, self).__init__()
+		#uic.loadUi('UI_Files/dash.ui', self)
+		# Create a VideoCapture object and read from input file 
+		cap = cv2.VideoCapture('Wildlife.wmv')
+		   
+		# Read until video is completed 
+		while(cap.isOpened()):
+			ret, frame = cap.read()
+			if ret == True:
+		# Capture frame-by-frame 
+				ret, frame = cap.read() 
+				cv2.namedWindow("mask", cv2.WINDOW_NORMAL)
+				cv2.imshow("mask", frame)
+				cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+				cv2.resizeWindow("mask",720,400)
+				cv2.moveWindow("mask", 320,220)
+				
+				if cv2.waitKey(25) & 0xFF == ord('q'):
+					break
+
+			else:
+				break
+		   
+		# When everything done, release  
+		# the video capture object 
+		cap.release() 
+		   
+		# Closes all the frames 
+		cv2.destroyAllWindows()
 		uic.loadUi('UI_Files/dash.ui', self)
 		self.timer = QTimer()
 		self.create.clicked.connect(self.createGest)
@@ -177,8 +208,21 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.clicked.connect(self.scanSent)
 		if(self.scan_sinlge.clicked.connect(self.scanSingle)==True):
 			self.timer.timeout.connect(self.scanSingle)
-		
-		#controlTimer(self)
+
+		#self.setLayout(QtWidgets.QHBoxLayout())
+		self._layout = self.layout()
+
+		self.label_3 = QtWidgets.QLabel()
+		movie = QtGui.QMovie("icons/sl2.gif")
+		self.label_3.setMovie(movie)
+		self.label_3.setGeometry(0,160,780,441)
+		movie.start()
+		self._layout.addWidget(self.label_3)
+
+		#self._message = QtWidgets.QLabel()
+		#self._message.setText("hello")
+		#self._layout.addWidget(self._message)
+		self.setObjectName('Message_Window')
 		
 	def createGest(self):
 		try:
@@ -255,12 +299,12 @@ class Dashboard(QtWidgets.QMainWindow):
 
 
 			try:
-				self.pushButton.clicked.connect(lambda:capture_images(self.cam,saveimg,mask))
+				self.pushButton.clicked.connect(lambda:capture_images(self,self.cam,saveimg,mask))
 			except:
 				pass			
 				
 			if cv2.waitKey(1) == 27:
-			    break
+				break
 
 
 		self.cam.release()
@@ -269,9 +313,13 @@ class Dashboard(QtWidgets.QMainWindow):
 			os.mkdir('./SampleGestures')
 
 		gesname=saveimg[-1]
-		img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
-		save_img = cv2.resize(mask, (image_x, image_y))
-		cv2.imwrite(img_name, save_img)
+		if(len(gesname)>=1):
+			img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
+			save_img = cv2.resize(mask, (image_x, image_y))
+			cv2.imwrite(img_name, save_img)
+
+		if os.path.exists("./SampleGestures/"+str(gesname)+".png"):
+			QtWidgets.QMessageBox.about(self, "Success", "Gesture Saved Successfully!")
 
 		#self.close()
 
@@ -304,6 +352,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		os.remove("temp.txt")
 		fw.close()
 		root.destroy()
+
+		if not os.path.exists('temp.txt'):
+			QtWidgets.QMessageBox.about(self, "Information", "File saved successfully!")
+			self.textBrowser.setText("		 ")
+		
 
 
 	def scanSent(self):
@@ -340,7 +393,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			except:
 				keyboard.press_and_release('esc')
 				keyboard.press_and_release('esc')
-				keyboard.press_and_release('esc')
+				#keyboard.press_and_release('esc')
 
 			height, width, channel = img.shape
 			step = channel * width
@@ -360,9 +413,12 @@ class Dashboard(QtWidgets.QMainWindow):
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
 			
+			cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
 			image = cv2.imread('template.png')
 			cv2.imshow("Image",image)
-			cv2.moveWindow("Image", 1030,150)
+			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("Image",298,430)
+			cv2.moveWindow("Image", 1052,214)
 			
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask1)
@@ -374,7 +430,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 
 			
-			self.textBrowser.setText(img_text)
+			self.textBrowser.setText("\n         "+str(img_text))
 			img_name = "1.png"
 			save_img = cv2.resize(mask1, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
@@ -402,19 +458,23 @@ class Dashboard(QtWidgets.QMainWindow):
 						append_text=''
 					 
 			try:
-				self.pushButton.clicked.connect(lambda:saveBuff(self.cam,finalBuffer))
+				self.pushButton.clicked.connect(lambda:saveBuff(self,self.cam,finalBuffer))
 			except:
 				pass
 			if cv2.waitKey(1) == 27:
-				f=open("temp.txt","w")
-				for i in finalBuffer:
-					f.write(i)
-				f.close()
-				
+				if(len(finalBuffer)>=1):
+					f=open("temp.txt","w")
+					for i in finalBuffer:
+						f.write(i)
+					f.close()
 				break
-				
+			
 		self.cam.release()
 		cv2.destroyAllWindows()
+
+		if os.path.exists('temp.txt'):
+			QtWidgets.QMessageBox.about(self, "Information", "File saved successfully!")
+			self.textBrowser.setText("		 ")
 
 	def scanSingle(self):
 		try:
@@ -457,9 +517,12 @@ class Dashboard(QtWidgets.QMainWindow):
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
 			
+			cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
 			image = cv2.imread('template.png')
 			cv2.imshow("Image",image)
-			cv2.moveWindow("Image", 1030,150)
+			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+			cv2.resizeWindow("Image",298,430)
+			cv2.moveWindow("Image", 1052,214)
 			
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask)
