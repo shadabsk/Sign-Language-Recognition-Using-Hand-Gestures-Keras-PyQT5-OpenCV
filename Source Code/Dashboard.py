@@ -42,6 +42,11 @@ def clearfunc(cam):
 	cam.release()
 	cv2.destroyAllWindows()
 
+def clearfunc2(cam,finalBuffer):
+	cam.release()
+	cv2.destroyAllWindows()
+	finalBuffer.clear()
+
 def saveBuff(self,cam,finalBuffer):
 	cam.release()
 	cv2.destroyAllWindows()
@@ -231,14 +236,14 @@ class Dashboard(QtWidgets.QMainWindow):
 			clearfunc(self.cam)
 		except:
 			pass
+		gesname=""
 		#runpy.run_path("CreateGest.py")
 		uic.loadUi('UI_Files/create_gest.ui', self)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
-		self.scan_sinlge.clicked.connect(self.scanSingle)	
-		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
+		self.scan_sinlge.clicked.connect(self.scanSingle)
 		self.plainTextEdit.setPlaceholderText("Enter Gesture Name Here") 
 		img_text = ''
 		saveimg=[]
@@ -291,14 +296,11 @@ class Dashboard(QtWidgets.QMainWindow):
 				ges_name = self.plainTextEdit.toPlainText()
 			except:
 				pass
-
-			if(len(ges_name)>1):
+			if(len(ges_name)>=1):
 				saveimg.append(ges_name)
-				ges_name=''
 			else:
 				saveimg.append(ges_name)
 				ges_name=''
-
 
 			try:
 				self.pushButton.clicked.connect(lambda:capture_images(self,self.cam,saveimg,mask))
@@ -308,17 +310,20 @@ class Dashboard(QtWidgets.QMainWindow):
 			if cv2.waitKey(1) == 27:
 				break
 
-
+		gesname=saveimg[-1]		
 		self.cam.release()
 		cv2.destroyAllWindows()
 		if not os.path.exists('./SampleGestures'):
 			os.mkdir('./SampleGestures')
+		
+		
 
-		gesname=saveimg[-1]
+		
 		if(len(gesname)>=1):
 			img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
 			save_img = cv2.resize(mask, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
+
 
 		if os.path.exists("./SampleGestures/"+str(gesname)+".png"):
 			QtWidgets.QMessageBox.about(self, "Success", "Gesture Saved Successfully!")
@@ -372,7 +377,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)	
-		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
+		try:
+			self.pushButton_2.clicked.connect(lambda:clearfunc2(self.cam,finalBuffer))
+		except:
+			pass
 		img_text = ''
 		img_text1 = ''
 		append_text=''
@@ -444,13 +452,6 @@ class Dashboard(QtWidgets.QMainWindow):
 					except:
 						append_text+=''
 					self.textBrowser_4.setText(new_text)
-					'''try:
-						y=0
-						for x in range(len(finalBuffer)):
-							self.textBrowser_4.setText(finalBuffer[x])
-							y+=20
-					except:
-						pass'''
 					
 					if(len(append_text)>1):
 						finalBuffer.append(append_text)

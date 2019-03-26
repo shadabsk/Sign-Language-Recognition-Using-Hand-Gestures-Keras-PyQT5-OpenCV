@@ -54,25 +54,6 @@ border: 2px solid white; border-radius:10px;</string>
      <string>Scan Single Gestures</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>500</y>
-      <width>91</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white;
-font: 16pt &quot;Times New Roman&quot;;
-color: black;
-border: 2px solid #4ba1df; border-radius:20px;</string>
-    </property>
-    <property name="text">
-     <string>Clear</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView_3">
     <property name="geometry">
      <rect>
@@ -353,9 +334,9 @@ border: 3px solid #4ba1df;</string>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>540</x>
+      <x>440</x>
       <y>500</y>
-      <width>91</width>
+      <width>171</width>
       <height>41</height>
      </rect>
     </property>
