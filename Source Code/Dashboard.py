@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
+from PyQt5 import QtCore
 from scipy.ndimage import imread
 from PyQt5.QtCore import QTimer,Qt 
 from PyQt5 import QtGui
@@ -37,6 +38,15 @@ def fileSearch():
 	    if file.endswith(".png"):
 	    	fileEntry.append(file)
 	return fileEntry
+
+def openimg():
+	cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
+	image = cv2.imread('template.png')
+	cv2.imshow("Image",image)
+	cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+	cv2.resizeWindow("Image",298,430)
+	cv2.moveWindow("Image", 1052,214)
+
 
 def clearfunc(cam):
 	cam.release()
@@ -220,7 +230,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		self._layout = self.layout()
 
 		self.label_3 = QtWidgets.QLabel()
-		movie = QtGui.QMovie("icons/sl2.gif")
+		movie = QtGui.QMovie("icons/dashAnimation.gif")
 		self.label_3.setMovie(movie)
 		self.label_3.setGeometry(0,160,780,441)
 		movie.start()
@@ -244,6 +254,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
+		self.linkButton.clicked.connect(openimg)
+		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.plainTextEdit.setPlaceholderText("Enter Gesture Name Here") 
 		img_text = ''
 		saveimg=[]
@@ -275,12 +290,12 @@ class Dashboard(QtWidgets.QMainWindow):
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
+			'''cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
 			image = cv2.imread('template.png')
 			cv2.imshow("Image",image)
 			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 			cv2.resizeWindow("Image",298,430)
-			cv2.moveWindow("Image", 1052,214)
+			cv2.moveWindow("Image", 1052,214)'''
 
 
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
@@ -340,6 +355,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
+		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		content=checkFile()
 		self.textBrowser.setText("		 "+content)
 		if(content=="File Not Found"):
@@ -381,6 +400,11 @@ class Dashboard(QtWidgets.QMainWindow):
 			self.pushButton_2.clicked.connect(lambda:clearfunc2(self.cam,finalBuffer))
 		except:
 			pass
+		self.linkButton.clicked.connect(openimg)
+		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		img_text = ''
 		img_text1 = ''
 		append_text=''
@@ -423,12 +447,12 @@ class Dashboard(QtWidgets.QMainWindow):
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
+			'''cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
 			image = cv2.imread('template.png')
 			cv2.imshow("Image",image)
 			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 			cv2.resizeWindow("Image",298,430)
-			cv2.moveWindow("Image", 1052,214)
+			cv2.moveWindow("Image", 1052,214)'''
 			
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask1)
@@ -439,8 +463,10 @@ class Dashboard(QtWidgets.QMainWindow):
 			hwnd = winGuiAuto.findTopWindow("mask")
 			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 
-			
-			self.textBrowser.setText("\n         "+str(img_text))
+			try:
+				self.textBrowser.setText("\n         "+str(img_text))
+			except:
+				pass
 			img_name = "1.png"
 			save_img = cv2.resize(mask1, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
@@ -491,6 +517,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		if(self.scan_sinlge.clicked.connect(self.scanSingle)):
 			controlTimer(self)
 		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
+		self.linkButton.clicked.connect(openimg)
+		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		img_text = ''
 		while True:
 			ret, frame = self.cam.read()
@@ -520,12 +551,12 @@ class Dashboard(QtWidgets.QMainWindow):
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
+			'''cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
 			image = cv2.imread('template.png')
 			cv2.imshow("Image",image)
 			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 			cv2.resizeWindow("Image",298,430)
-			cv2.moveWindow("Image", 1052,214)
+			cv2.moveWindow("Image", 1052,214)'''
 			
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask)

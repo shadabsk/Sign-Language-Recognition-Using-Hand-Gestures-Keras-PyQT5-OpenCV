@@ -55,157 +55,6 @@
      <string>Sign Language Detection Using Hand Gestures</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="create">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>TImes New Roman</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::RightToLeft</enum>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding-left:-40px;
-color:black;
-background-color:#fefefe;
-border: 2px solid #58e870; border-radius:30px;
-font: 12pt &quot;TImes New Roman&quot;;
-background-image:url(&quot;icons/create.png&quot;);
-background-repeat:none;</string>
-    </property>
-    <property name="text">
-     <string>Create Gesture</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="scan_sinlge">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>70</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>TImes New Roman</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding-left:65px;
-color:black;
-background-color:#fefefe;
-border:2px solid #58e870; border-radius:30px;
-font: 12pt &quot;TImes New Roman&quot;;
-background-image:url(&quot;icons/scan.png&quot;);
-background-repeat:none;</string>
-    </property>
-    <property name="text">
-     <string>Scan Gestures</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="exp2">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>70</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>TImes New Roman</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding-left:50px;
-color:black;
-background-color:#fefefe;
-border: 2px solid #58e870; border-radius:30px;
-font: 12pt &quot;TImes New Roman&quot;;
-background-image:url(&quot;icons/export.png&quot;);
-background-repeat:none;</string>
-    </property>
-    <property name="text">
-     <string>Export To File</string>
-    </property>
-    <property name="checkable">
-     <bool>false</bool>
-    </property>
-    <property name="autoRepeat">
-     <bool>false</bool>
-    </property>
-    <property name="autoExclusive">
-     <bool>false</bool>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="scan_sen">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>70</y>
-      <width>171</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>TImes New Roman</family>
-      <pointsize>12</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">padding-left:65px;
-color:black;
-background-color:#fefefe;
-border: 2px solid #58e870; border-radius:30px;
-font: 12pt &quot;TImes New Roman&quot;;
-background-image:url(&quot;icons/sent.png&quot;);
-background-repeat:none;</string>
-    </property>
-    <property name="text">
-     <string>Scan Sentence </string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
@@ -239,14 +88,185 @@ color:white;
 </string>
     </property>
    </widget>
-   <zorder>graphicsView_2</zorder>
-   <zorder>label</zorder>
-   <zorder>create</zorder>
-   <zorder>exp2</zorder>
-   <zorder>scan_sen</zorder>
-   <zorder>scan_sinlge</zorder>
-   <zorder>label_3</zorder>
-   <zorder>graphicsView</zorder>
+   <widget class="QPushButton" name="create">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>TImes New Roman</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#create{
+padding-left:-40px;
+color:black;
+background-color:#fefefe;
+border: 2px solid #58e870; border-radius:30px;
+font: 12pt &quot;TImes New Roman&quot;;
+background-image:url(&quot;icons/create.png&quot;);
+background-repeat:none;
+}
+QPushButton#create:hover
+{
+   background-color:lightgreen;
+	color:white;
+}</string>
+    </property>
+    <property name="text">
+     <string>   Create Gesture</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="scan_sen">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>70</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>TImes New Roman</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#scan_sen{
+padding-left:-40px;
+color:black;
+background-color:#fefefe;
+border: 2px solid #58e870; border-radius:30px;
+font: 12pt &quot;TImes New Roman&quot;;
+background-image:url(&quot;icons/sent.png&quot;);
+background-repeat:none;
+}
+QPushButton#scan_sen:hover
+{
+   background-color:lightgreen;
+	color:white;
+}</string>
+    </property>
+    <property name="text">
+     <string>                          Scan Sentence </string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="scan_sinlge">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>70</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>TImes New Roman</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#scan_sinlge{
+padding-left:-40px;
+color:black;
+background-color:#fefefe;
+border: 2px solid #58e870; border-radius:30px;
+font: 12pt &quot;TImes New Roman&quot;;
+background-image:url(&quot;icons/scan.png&quot;);
+background-repeat:none;
+}
+QPushButton#scan_sinlge:hover
+{
+   background-color:lightgreen;
+	color:white;
+}</string>
+    </property>
+    <property name="text">
+     <string>                         Scan Gestures</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="exp2">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>70</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>TImes New Roman</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#exp2{
+padding-left:-40px;
+color:black;
+background-color:#fefefe;
+border: 2px solid #58e870; border-radius:30px;
+font: 12pt &quot;TImes New Roman&quot;;
+background-image:url(&quot;icons/export.png&quot;);
+background-repeat:none;
+}
+QPushButton#exp2:hover
+{
+   background-color:lightgreen;
+	color:white;
+}</string>
+    </property>
+    <property name="text">
+     <string>                       Export To File</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="autoRepeat">
+     <bool>false</bool>
+    </property>
+    <property name="autoExclusive">
+     <bool>false</bool>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
