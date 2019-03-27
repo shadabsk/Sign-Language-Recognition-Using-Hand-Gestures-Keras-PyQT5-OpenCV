@@ -54,7 +54,7 @@ border: 2px solid white; border-radius:10px;</string>
      <string>Export To File</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser">
+   <widget class="QTextBrowser" name="textBrowser_98">
     <property name="enabled">
      <bool>true</bool>
     </property>

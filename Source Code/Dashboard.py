@@ -21,8 +21,8 @@ import winGuiAuto
 import win32gui
 import win32con
 import keyboard
-
-
+import pyttsx3
+engine = pyttsx3.init()
 
 def nothing(x):
 	pass
@@ -51,6 +51,11 @@ def openimg():
 def clearfunc(cam):
 	cam.release()
 	cv2.destroyAllWindows()
+
+def clearfuncl(cam):
+	cam.release()
+	cv2.destroyAllWindows()
+	#finalBuffer.clear()
 
 def clearfunc2(cam,finalBuffer):
 	cam.release()
@@ -225,6 +230,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.clicked.connect(self.scanSent)
 		if(self.scan_sinlge.clicked.connect(self.scanSingle)==True):
 			self.timer.timeout.connect(self.scanSingle)
+		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
 		#self.setLayout(QtWidgets.QHBoxLayout())
 		self._layout = self.layout()
@@ -347,7 +356,7 @@ class Dashboard(QtWidgets.QMainWindow):
 
 	def exportFile(self):
 		try:
-			clearfunc(self.cam)
+			clearfuncl(self.cam)
 		except:
 			pass
 		uic.loadUi('UI_Files/export.ui', self)
@@ -360,7 +369,9 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		content=checkFile()
-		self.textBrowser.setText("		 "+content)
+		self.textBrowser_98.setText("		 "+content)
+		engine.say(str(content))
+		engine.runAndWait()
 		if(content=="File Not Found"):
 			self.pushButton_2.setEnabled(False)
 		else:
@@ -491,12 +502,16 @@ class Dashboard(QtWidgets.QMainWindow):
 			except:
 				pass
 			if cv2.waitKey(1) == 27:
+				break
+
+			if cv2.waitKey(1)== ord('q'):
 				if(len(finalBuffer)>=1):
 					f=open("temp.txt","w")
 					for i in finalBuffer:
 						f.write(i)
 					f.close()
 				break
+
 			
 		self.cam.release()
 		cv2.destroyAllWindows()
