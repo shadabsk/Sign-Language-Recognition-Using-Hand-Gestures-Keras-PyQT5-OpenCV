@@ -103,30 +103,33 @@ def predictor():
 	result = classifier.predict(test_image)
 	gesname=''
 	fileEntry=fileSearch()
-	image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[0])
-	original = cv2.imread("1.png")
-	sift = cv2.xfeatures2d.SIFT_create()
-	kp_1, desc_1 = sift.detectAndCompute(original, None)
-	kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
+	for i in range(len(fileEntry)):
+		image_to_compare = cv2.imread("./SampleGestures/"+fileEntry[i])
+		original = cv2.imread("1.png")
+		sift = cv2.xfeatures2d.SIFT_create()
+		kp_1, desc_1 = sift.detectAndCompute(original, None)
+		kp_2, desc_2 = sift.detectAndCompute(image_to_compare, None)
 
-	index_params = dict(algorithm=0, trees=5)
-	search_params = dict()
-	flann = cv2.FlannBasedMatcher(index_params, search_params)
+		index_params = dict(algorithm=0, trees=5)
+		search_params = dict()
+		flann = cv2.FlannBasedMatcher(index_params, search_params)
 
-	matches = flann.knnMatch(desc_1, desc_2, k=2)
+		matches = flann.knnMatch(desc_1, desc_2, k=2)
 
-	good_points = []
-	ratio = 0.6
-	for m, n in matches:
-	      if m.distance < ratio*n.distance:
-	             good_points.append(m)
-	#print(fileEntry[i])
-	if(abs(len(good_points)+len(matches))>20):
-		gesname=fileEntry[0]
-		gesname=gesname.replace('.png','')
-		return gesname
+		good_points = []
+		ratio = 0.6
+		for m, n in matches:
+		      if m.distance < ratio*n.distance:
+		             good_points.append(m)
+		#print(fileEntry[i])
+		if(abs(len(good_points)+len(matches))>20):
+			gesname=fileEntry[i]
+			gesname=gesname.replace('.png','')
+			if(gesname=='sp'):
+				gesname=' '
+			return gesname
 
-	elif result[0][0] == 1:
+	if result[0][0] == 1:
 		  return 'A'
 	elif result[0][1] == 1:
 		  return 'B'
@@ -189,12 +192,13 @@ def checkFile():
 		content=fr.read()
 		fr.close()
 	else:
-		content="File Not Found"
+		content="No Content Available"
 	return content
 
 class Dashboard(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(Dashboard, self).__init__()
+		self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.FramelessWindowHint)
 		#uic.loadUi('UI_Files/dash.ui', self)
 		# Create a VideoCapture object and read from input file 
 		cap = cv2.VideoCapture('Wildlife.wmv')
@@ -223,7 +227,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		   
 		# Closes all the frames 
 		cv2.destroyAllWindows()
+		self.setWindowIcon(QtGui.QIcon('icons/windowLogo.png'))
+		self.title = 'Sign language Recognition'
 		uic.loadUi('UI_Files/dash.ui', self)
+		self.setWindowTitle(self.title)
+		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		self.timer = QTimer()
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
@@ -258,8 +266,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		gesname=""
 		#runpy.run_path("CreateGest.py")
 		uic.loadUi('UI_Files/create_gest.ui', self)
+		self.setWindowTitle(self.title)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
+		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
@@ -360,17 +370,19 @@ class Dashboard(QtWidgets.QMainWindow):
 		except:
 			pass
 		uic.loadUi('UI_Files/export.ui', self)
+		self.setWindowTitle(self.title)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
+		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		content=checkFile()
 		self.textBrowser_98.setText("		 "+content)
-		engine.say(str(content))
+		engine.say(str(content).lower())
 		engine.runAndWait()
 		if(content=="File Not Found"):
 			self.pushButton_2.setEnabled(False)
@@ -385,14 +397,22 @@ class Dashboard(QtWidgets.QMainWindow):
 		name=root.filename
 		#fr.close()
 		fw=open(name+".txt","w")
+		if(content=='No Content Available'):
+			content=" "
 		fw.write(content)
-		os.remove("temp.txt")
+		try:
+			os.remove("temp.txt")
+		except:
+			QtWidgets.QMessageBox.about(self, "Information", "Nothing to export")
 		fw.close()
 		root.destroy()
 
 		if not os.path.exists('temp.txt'):
-			QtWidgets.QMessageBox.about(self, "Information", "File saved successfully!")
-			self.textBrowser.setText("		 ")
+			if os.path.exists('.txt'):
+				os.remove('.txt')
+			else:
+				QtWidgets.QMessageBox.about(self, "Information", "File saved successfully!")
+				self.textBrowser_98.setText("		 ")
 		
 
 
@@ -402,8 +422,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		except:
 			pass
 		uic.loadUi('UI_Files/scan_sent.ui', self)
+		self.setWindowTitle(self.title)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
+		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)	
@@ -518,7 +540,10 @@ class Dashboard(QtWidgets.QMainWindow):
 
 		if os.path.exists('temp.txt'):
 			QtWidgets.QMessageBox.about(self, "Information", "File is temporarily saved ... you can now proceed to export")
+		try:
 			self.textBrowser.setText("		 ")
+		except:
+			pass
 
 	def scanSingle(self):
 		try:
@@ -526,6 +551,8 @@ class Dashboard(QtWidgets.QMainWindow):
 		except:
 			pass
 		uic.loadUi('UI_Files/scan_single.ui', self)
+		self.setWindowTitle(self.title)
+		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
@@ -582,7 +609,11 @@ class Dashboard(QtWidgets.QMainWindow):
 			hwnd = winGuiAuto.findTopWindow("mask")
 			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
 			
-			self.textBrowser.setText("\n\n\t"+str(img_text))
+			try:
+				self.textBrowser.setText("\n\n\t"+str(img_text))
+			except:
+				pass
+
 			img_name = "1.png"
 			save_img = cv2.resize(mask, (image_x, image_y))
 			cv2.imwrite(img_name, save_img)
