@@ -52,16 +52,6 @@ def clearfunc(cam):
 	cam.release()
 	cv2.destroyAllWindows()
 
-def clearfuncl(cam):
-	cam.release()
-	cv2.destroyAllWindows()
-	#finalBuffer.clear()
-
-def clearfunc2(cam,finalBuffer):
-	cam.release()
-	cv2.destroyAllWindows()
-	finalBuffer.clear()
-
 def saveBuff(self,cam,finalBuffer):
 	cam.release()
 	cv2.destroyAllWindows()
@@ -88,9 +78,9 @@ def capture_images(self,cam,saveimg,mask):
 def controlTimer(self):
 	# if timer is stopped
 	self.timer.isActive()
-		# create video capture
+	# create video capture
 	self.cam = cv2.VideoCapture(0)
-		# start timer
+	# start timer
 	self.timer.start(20)
             
 
@@ -231,7 +221,6 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.title = 'Sign language Recognition'
 		uic.loadUi('UI_Files/dash.ui', self)
 		self.setWindowTitle(self.title)
-		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		self.timer = QTimer()
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
@@ -242,34 +231,31 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-
-		#self.setLayout(QtWidgets.QHBoxLayout())
+		self.exit_button.clicked.connect(self.quitApplication)
 		self._layout = self.layout()
-
 		self.label_3 = QtWidgets.QLabel()
 		movie = QtGui.QMovie("icons/dashAnimation.gif")
 		self.label_3.setMovie(movie)
 		self.label_3.setGeometry(0,160,780,441)
 		movie.start()
 		self._layout.addWidget(self.label_3)
-
-		#self._message = QtWidgets.QLabel()
-		#self._message.setText("hello")
-		#self._layout.addWidget(self._message)
 		self.setObjectName('Message_Window')
 		
+	def quitApplication(self):
+		userReply = QMessageBox.question(self, 'Quit Application', "Are you sure you want to quit this app?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+		if userReply == QMessageBox.Yes:
+			keyboard.press_and_release('alt+F4')
+
 	def createGest(self):
 		try:
 			clearfunc(self.cam)
 		except:
 			pass
 		gesname=""
-		#runpy.run_path("CreateGest.py")
 		uic.loadUi('UI_Files/create_gest.ui', self)
 		self.setWindowTitle(self.title)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
-		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
@@ -278,6 +264,12 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
+		try:
+			self.exit_button.clicked.connect(lambda:clearfunc(self.cam))
+		except:
+			pass
+		self.exit_button.clicked.connect(self.quitApplication)
 		self.plainTextEdit.setPlaceholderText("Enter Gesture Name Here") 
 		img_text = ''
 		saveimg=[]
@@ -304,24 +296,15 @@ class Dashboard(QtWidgets.QMainWindow):
 
 			lower_blue = np.array([0, 0, 0])
 			upper_blue = np.array([179, 255, slider2])
-			
 			imcrop = img2[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			'''cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
-			image = cv2.imread('template.png')
-			cv2.imshow("Image",image)
-			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-			cv2.resizeWindow("Image",298,430)
-			cv2.moveWindow("Image", 1052,214)'''
-
-
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask)
 			cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-			cv2.resizeWindow("mask",140,160)
-			cv2.moveWindow("mask", 764,271)
+			cv2.resizeWindow("mask",170,160)
+			cv2.moveWindow("mask", 766,271)
 
 			hwnd = winGuiAuto.findTopWindow("mask")
 			win32gui.SetWindowPos(hwnd, win32con.HWND_TOP, 0,0,0,0,win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE)
@@ -340,33 +323,30 @@ class Dashboard(QtWidgets.QMainWindow):
 				self.pushButton.clicked.connect(lambda:capture_images(self,self.cam,saveimg,mask))
 			except:
 				pass			
-				
-			if cv2.waitKey(1) == 27:
+			
+			gesname=saveimg[-1]
+
+			if keyboard.is_pressed('shift+s'):
+				if not os.path.exists('./SampleGestures'):
+					os.mkdir('./SampleGestures')
+				if(len(gesname)>=1):
+					img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
+					save_img = cv2.resize(mask, (image_x, image_y))
+					cv2.imwrite(img_name, save_img)
 				break
 
-		gesname=saveimg[-1]		
+			if cv2.waitKey(1) == 27:
+				break
+		
 		self.cam.release()
 		cv2.destroyAllWindows()
-		if not os.path.exists('./SampleGestures'):
-			os.mkdir('./SampleGestures')
-		
-		
-
-		
-		if(len(gesname)>=1):
-			img_name = "./SampleGestures/"+"{}.png".format(str(gesname))
-			save_img = cv2.resize(mask, (image_x, image_y))
-			cv2.imwrite(img_name, save_img)
-
 
 		if os.path.exists("./SampleGestures/"+str(gesname)+".png"):
 			QtWidgets.QMessageBox.about(self, "Success", "Gesture Saved Successfully!")
 
-		#self.close()
-
 	def exportFile(self):
 		try:
-			clearfuncl(self.cam)
+			clearfunc(self.cam)
 		except:
 			pass
 		uic.loadUi('UI_Files/export.ui', self)
@@ -375,11 +355,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
 		self.scan_sinlge.clicked.connect(self.scanSingle)
-		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		self.create.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.exit_button.clicked.connect(self.quitApplication)
 		content=checkFile()
 		self.textBrowser_98.setText("		 "+content)
 		engine.say(str(content).lower())
@@ -425,12 +405,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.setWindowTitle(self.title)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
-		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		if(self.scan_sen.clicked.connect(self.scanSent)):
 			controlTimer(self)
 		self.scan_sinlge.clicked.connect(self.scanSingle)	
 		try:
-			self.pushButton_2.clicked.connect(lambda:clearfunc2(self.cam,finalBuffer))
+			self.pushButton_2.clicked.connect(lambda:clearfunc(self.cam))
 		except:
 			pass
 		self.linkButton.clicked.connect(openimg)
@@ -438,15 +417,15 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		try:
+			self.exit_button.clicked.connect(lambda:clearfunc(self.cam))
+		except:
+			pass
+		self.exit_button.clicked.connect(self.quitApplication)
 		img_text = ''
-		img_text1 = ''
 		append_text=''
 		new_text=''
 		finalBuffer=[]
-		x=0
-		y=0
-		y1=y+10
-		z=0
 
 		while True:
 			ret, frame =self.cam.read()
@@ -460,7 +439,6 @@ class Dashboard(QtWidgets.QMainWindow):
 			except:
 				keyboard.press_and_release('esc')
 				keyboard.press_and_release('esc')
-				#keyboard.press_and_release('esc')
 
 			height, width, channel = img.shape
 			step = channel * width
@@ -475,17 +453,10 @@ class Dashboard(QtWidgets.QMainWindow):
 				
 			lower_blue = np.array([0, 0, 0])
 			upper_blue = np.array([179, 255, slider])
-
 			imcrop = img[52:198, 152:298]
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask1 = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			'''cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
-			image = cv2.imread('template.png')
-			cv2.imshow("Image",image)
-			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-			cv2.resizeWindow("Image",298,430)
-			cv2.moveWindow("Image", 1052,214)'''
 			
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask1)
@@ -526,7 +497,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			if cv2.waitKey(1) == 27:
 				break
 
-			if cv2.waitKey(1)== ord('q'):
+			if keyboard.is_pressed('shift+s'):
 				if(len(finalBuffer)>=1):
 					f=open("temp.txt","w")
 					for i in finalBuffer:
@@ -552,7 +523,6 @@ class Dashboard(QtWidgets.QMainWindow):
 			pass
 		uic.loadUi('UI_Files/scan_single.ui', self)
 		self.setWindowTitle(self.title)
-		self.exit_button.clicked.connect(QtWidgets.qApp.quit)
 		self.create.clicked.connect(self.createGest)
 		self.exp2.clicked.connect(self.exportFile)
 		self.scan_sen.clicked.connect(self.scanSent)
@@ -564,6 +534,11 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.scan_sen.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.scan_sinlge.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.exp2.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		try:
+			self.exit_button.clicked.connect(lambda:clearfunc(self.cam))
+		except:
+			pass
+		self.exit_button.clicked.connect(self.quitApplication)
 		img_text = ''
 		while True:
 			ret, frame = self.cam.read()
@@ -593,13 +568,6 @@ class Dashboard(QtWidgets.QMainWindow):
 			hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
 			mask = cv2.inRange(hsv, lower_blue, upper_blue)
 			
-			'''cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
-			image = cv2.imread('template.png')
-			cv2.imshow("Image",image)
-			cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
-			cv2.resizeWindow("Image",298,430)
-			cv2.moveWindow("Image", 1052,214)'''
-			
 			cv2.namedWindow("mask", cv2.WINDOW_NORMAL )
 			cv2.imshow("mask", mask)
 			cv2.setWindowProperty("mask",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
@@ -619,14 +587,11 @@ class Dashboard(QtWidgets.QMainWindow):
 			cv2.imwrite(img_name, save_img)
 			img_text = predictor()
 				
-
 			if cv2.waitKey(1) == 27:
 			    break
 
-
 		self.cam.release()
 		cv2.destroyAllWindows()
-
 
 app = QtWidgets.QApplication([])
 win = Dashboard()
