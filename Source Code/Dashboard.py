@@ -10,6 +10,8 @@ from PyQt5 import QtGui
 from tkinter import filedialog
 from tkinter import * 
 import tkinter as tk
+from matplotlib import pyplot as plt
+from matplotlib.widgets import Button
 import sys
 import os
 import runpy
@@ -22,6 +24,8 @@ import win32gui
 import win32con
 import keyboard
 import pyttsx3
+import shutil
+index = 0
 engine = pyttsx3.init()
 
 def nothing(x):
@@ -38,6 +42,42 @@ def fileSearch():
 	    if file.endswith(".png"):
 	    	fileEntry.append(file)
 	return fileEntry
+
+def load_images_from_folder(folder):
+    images = []
+    for filename in os.listdir(folder):
+        img = cv2.imread(os.path.join(folder,filename))
+        if img is not None:
+            images.append(img)
+    return images
+
+def toggle_imagesfwd(event):
+	img=load_images_from_folder('TempGest/')
+	global index
+
+	index += 1
+
+	try:
+		if index < len(img):
+			plt.axes()
+			plt.imshow(img[index])
+			plt.draw()
+	except:
+		pass
+
+def toggle_imagesrev(event):
+	img=load_images_from_folder('TempGest/')
+	global index
+
+	index -= 1
+
+	try:
+		if index < len(img) and index>=0:
+			plt.axes()
+			plt.imshow(img[index])
+			plt.draw()
+	except:
+		pass
 
 def openimg():
 	cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
@@ -366,14 +406,19 @@ class Dashboard(QtWidgets.QMainWindow):
 		engine.runAndWait()
 		if(content=="File Not Found"):
 			self.pushButton_2.setEnabled(False)
+			self.pushButton_3.setEnabled(False)
 		else:
 			self.pushButton_2.clicked.connect(self.on_click)
+			try:
+				self.pushButton_3.clicked.connect(self.gestureViewer)
+			except:
+				pass
 
 	def on_click(self):
 		content=checkFile()
 		root=Tk()
 		root.withdraw()
-		root.filename =  filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (("text files","*.txt"),("all files","*.*")))
+		root.filename =  filedialog.asksaveasfilename(initialdir = "/",title = "Select file",filetypes = (("Text files","*.txt"),("all files","*.*")))
 		name=root.filename
 		#fr.close()
 		fw=open(name+".txt","w")
@@ -382,6 +427,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		fw.write(content)
 		try:
 			os.remove("temp.txt")
+			shutil.rmtree("TempGest")
 		except:
 			QtWidgets.QMessageBox.about(self, "Information", "Nothing to export")
 		fw.close()
@@ -393,7 +439,25 @@ class Dashboard(QtWidgets.QMainWindow):
 			else:
 				QtWidgets.QMessageBox.about(self, "Information", "File saved successfully!")
 				self.textBrowser_98.setText("		 ")
-		
+	
+	def gestureViewer(self):
+		try:
+			img=load_images_from_folder('TempGest/')
+			plt.imshow(img[index])
+		except:
+			plt.text(0.5, 0.5, 'No new Gesture Available', horizontalalignment='center',verticalalignment='center')
+		axcut = plt.axes([0.9, 0.0, 0.1, 0.075])
+		axcut1 = plt.axes([0.0, 0.0, 0.1, 0.075])
+		bcut = Button(axcut, 'Next', color='dodgerblue', hovercolor='lightgreen')
+		bcut1 = Button(axcut1, 'Previous', color='dodgerblue', hovercolor='lightgreen')
+
+		#plt.connect('button_press_event', toggle_imagesfwd)
+		bcut.on_clicked(toggle_imagesfwd)
+		bcut1.on_clicked(toggle_imagesrev)
+		plt.show()
+		axcut._button = bcut
+		axcut1._button1 = bcut1
+	#buttonaxe._button = bcut
 
 
 	def scanSent(self):
@@ -426,7 +490,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		append_text=''
 		new_text=''
 		finalBuffer=[]
-
+		counts=0
 		while True:
 			ret, frame =self.cam.read()
 			frame = cv2.flip(frame,1)
@@ -477,11 +541,17 @@ class Dashboard(QtWidgets.QMainWindow):
 			img_text=predictor()
 			if cv2.waitKey(1) == ord('c'):
 					try:
+						counts+=1
 						append_text+=img_text
 						new_text+=img_text
+						if not os.path.exists('./TempGest'):
+							os.mkdir('./TempGest')
+						img_names = "./TempGest/"+"{}{}.png".format(str(img_text),str(counts))
+						save_imgs = cv2.resize(mask1, (image_x, image_y))
+						cv2.imwrite(img_names, save_imgs)
+						self.textBrowser_4.setText(new_text)
 					except:
 						append_text+=''
-					self.textBrowser_4.setText(new_text)
 					
 					if(len(append_text)>1):
 						finalBuffer.append(append_text)

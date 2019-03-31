@@ -469,7 +469,7 @@ QPushButton#pushButton_2:hover
 }</string>
     </property>
     <property name="text">
-     <string>Clear</string>
+     <string>Stop Scan</string>
     </property>
    </widget>
   </widget>

@@ -85,8 +85,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>500</y>
+      <x>400</x>
+      <y>510</y>
       <width>231</width>
       <height>41</height>
      </rect>
@@ -355,6 +355,42 @@ background-repeat:none;
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>510</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton#pushButton_3{
+color: black;
+background-color:#fefefe;
+border: 2px solid #4ba1df; border-radius:20px;
+font: 16pt &quot;Times New Roman&quot;;
+background-repeat:none;
+}
+QPushButton#pushButton_3:hover
+{
+	background-color:lightgreen;
+	color:black;
+}</string>
+    </property>
+    <property name="text">
+     <string>Gesture Viewer</string>
     </property>
    </widget>
   </widget>
