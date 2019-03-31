@@ -88,7 +88,22 @@ def openimg():
 	cv2.moveWindow("Image", 1052,214)
 
 
+def removeFile():
+	try:
+		os.remove("temp.txt")
+	except:
+		pass
+	try:
+		shutil.rmtree("TempGest")
+	except:
+		pass
+
 def clearfunc(cam):
+	cam.release()
+	cv2.destroyAllWindows()
+	removeFile()
+
+def clearfunc2(cam):
 	cam.release()
 	cv2.destroyAllWindows()
 
@@ -231,7 +246,7 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.FramelessWindowHint)
 		#uic.loadUi('UI_Files/dash.ui', self)
 		# Create a VideoCapture object and read from input file 
-		cap = cv2.VideoCapture('Wildlife.wmv')
+		cap = cv2.VideoCapture('gest1.mp4')
 		   
 		# Read until video is completed 
 		while(cap.isOpened()):
@@ -284,6 +299,7 @@ class Dashboard(QtWidgets.QMainWindow):
 	def quitApplication(self):
 		userReply = QMessageBox.question(self, 'Quit Application', "Are you sure you want to quit this app?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 		if userReply == QMessageBox.Yes:
+			removeFile()
 			keyboard.press_and_release('alt+F4')
 
 	def createGest(self):
@@ -386,7 +402,7 @@ class Dashboard(QtWidgets.QMainWindow):
 
 	def exportFile(self):
 		try:
-			clearfunc(self.cam)
+			clearfunc2(self.cam)
 		except:
 			pass
 		uic.loadUi('UI_Files/export.ui', self)
@@ -546,7 +562,7 @@ class Dashboard(QtWidgets.QMainWindow):
 						new_text+=img_text
 						if not os.path.exists('./TempGest'):
 							os.mkdir('./TempGest')
-						img_names = "./TempGest/"+"{}{}.png".format(str(img_text),str(counts))
+						img_names = "./TempGest/"+"{}{}.png".format(str(counts),str(img_text))
 						save_imgs = cv2.resize(mask1, (image_x, image_y))
 						cv2.imwrite(img_names, save_imgs)
 						self.textBrowser_4.setText(new_text)
