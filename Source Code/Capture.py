@@ -1,3 +1,6 @@
+__author__ = 'Rupesh Poudel'
+__SourcerepoLink__ = 'https://github.com/rrupeshh/Simple-Sign-Language-Detector'
+
 import cv2
 import time
 import numpy as np

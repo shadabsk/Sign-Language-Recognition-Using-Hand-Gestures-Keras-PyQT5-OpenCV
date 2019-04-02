@@ -1,3 +1,5 @@
+__author__ = 'Shadab Shaikh, Obaid Kazi'
+
 import cv2
 import numpy as np
 

@@ -1,3 +1,6 @@
+__author__ = 'Shadab Shaikh, Obaid Kazi, Rupesh poudel'
+__SourcerepoLink__ = 'https://github.com/rrupeshh/Simple-Sign-Language-Detector'
+
 import cv2
 import numpy as np
 import os
