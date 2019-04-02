@@ -4,7 +4,7 @@ Sign Language Recognition Using Hand Gestures Keras PyQT5 OpenCV
 ## Getting Started
 All the source code is available inside SourceCode Directory. It requires python version 3.6 as to synchronize with tensorflow.
 * Install the required libraries and packages.
-* Build the model with name "ASLModel.h5" using cnn_model.py or if give any name just modify the line 38 inside "Dashboard.py"
+* Build the model with name "ASLModel.h5" using cnn_model.py or give any name just modify the line 38 inside "Dashboard.py"
 * Download winGuiAuto.py and paste under lib->site-packages
 * Start using the application by simply double clicking "Dashboard.py"
 
