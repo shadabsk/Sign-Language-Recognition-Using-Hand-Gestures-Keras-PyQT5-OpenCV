@@ -1,49 +1,52 @@
+__author__ = 'Shadab Shaikh, Obaid Kazi, Ansari Mohd Adnan'
+
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
-from PyQt5 import QtCore
-from scipy.ndimage import imread
+from PyQt5 import QtCore						#importing pyqt5 libraries
+from scipy.ndimage import imread				#will help in reading the images
 from PyQt5.QtCore import QTimer,Qt 
-from PyQt5 import QtGui
-from tkinter import filedialog
+from PyQt5 import QtGui							
+from tkinter import filedialog					#for file export module
 from tkinter import * 
 import tkinter as tk
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt 			#for gesture viewer
 from matplotlib.widgets import Button
-import sys
-import os
-import runpy
-import cv2
-import numpy as np
-import qimage2ndarray
+import sys										#for pyqt
+import os										#for removal of files
+import cv2										#for the camera operations
+import numpy as np 								#proceesing on images
+import qimage2ndarray 							#convers images into matrix
 import win32api
-import winGuiAuto
+import winGuiAuto			
 import win32gui
-import win32con
-import keyboard
-import pyttsx3
-import shutil
-index = 0
-engine = pyttsx3.init()
+import win32con									#for removing title cv2 window and always on top
+import keyboard									#for pressing keys
+import pyttsx3									#for tts assistance
+import shutil									#for removal of directories
+index = 0										#index used for gesture viewer
+engine = pyttsx3.init()							#engine initialization for audio tts assistance
 
 def nothing(x):
 	pass
 
-image_x, image_y = 64,64
+image_x, image_y = 64,64						#image resolution
 
 from keras.models import load_model
-classifier = load_model('ASLModel.h5')
+classifier = load_model('ASLModel.h5')			#loading the model
 
 def fileSearch():
+	"""Searches each file ending with .png in SampleGestures dirrectory so that custom gesture could be passed to predictor() function"""
 	fileEntry=[]
 	for file in os.listdir("SampleGestures"):
 	    if file.endswith(".png"):
 	    	fileEntry.append(file)
-	return fileEntry
+	return fileEntry							
 
 def load_images_from_folder(folder):
+    """Searches each images in a specified directory"""
     images = []
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder,filename))
@@ -52,6 +55,7 @@ def load_images_from_folder(folder):
     return images
 
 def toggle_imagesfwd(event):
+	"""displays next images act as a gesutre viewer"""
 	img=load_images_from_folder('TempGest/')
 	global index
 
@@ -66,6 +70,7 @@ def toggle_imagesfwd(event):
 		pass
 
 def toggle_imagesrev(event):
+	"""displays previous images act as a gesutre viewer"""
 	img=load_images_from_folder('TempGest/')
 	global index
 
@@ -80,6 +85,7 @@ def toggle_imagesrev(event):
 		pass
 
 def openimg():
+	"""displays predefined gesture images at right most window"""
 	cv2.namedWindow("Image", cv2.WINDOW_NORMAL )
 	image = cv2.imread('template.png')
 	cv2.imshow("Image",image)
@@ -89,6 +95,7 @@ def openimg():
 
 
 def removeFile():
+	"""Removes the temp.txt and tempgest directory if any stop button is pressed oor application is closed"""
 	try:
 		os.remove("temp.txt")
 	except:
@@ -99,15 +106,18 @@ def removeFile():
 		pass
 
 def clearfunc(cam):
+	"""shut downs the opened camera and calls removeFile() Func"""
 	cam.release()
 	cv2.destroyAllWindows()
 	removeFile()
 
 def clearfunc2(cam):
+	"""shut downs the opened camera"""
 	cam.release()
 	cv2.destroyAllWindows()
 
 def saveBuff(self,cam,finalBuffer):
+	"""Save the file as temp.txt if save button is pressed in sentence formation through gui"""
 	cam.release()
 	cv2.destroyAllWindows()
 	if(len(finalBuffer)>=1):
@@ -118,6 +128,7 @@ def saveBuff(self,cam,finalBuffer):
 
 
 def capture_images(self,cam,saveimg,mask):
+	"""Saves the images for custom gestures if button is pressed in custom gesture generationn through gui"""
 	cam.release()
 	cv2.destroyAllWindows()
 	if not os.path.exists('./SampleGestures'):
@@ -140,6 +151,7 @@ def controlTimer(self):
             
 
 def predictor():
+	""" Depending on model loaded and customgesture saved prediction is made by checking array or through SiFt algo"""
 	import numpy as np
 	from keras.preprocessing import image
 	test_image = image.load_img('1.png', target_size=(64, 64))
@@ -166,11 +178,10 @@ def predictor():
 		for m, n in matches:
 		      if m.distance < ratio*n.distance:
 		             good_points.append(m)
-		#print(fileEntry[i])
-		if(abs(len(good_points)+len(matches))>20):
+		if(abs(len(good_points)+len(matches))>20):			#goodpoints and matcches sum from 1.png and customgestureimages is grater than 20
 			gesname=fileEntry[i]
 			gesname=gesname.replace('.png','')
-			if(gesname=='sp'):
+			if(gesname=='sp'):								#sp is replaced with <space>
 				gesname=' '
 			return gesname
 
@@ -226,11 +237,10 @@ def predictor():
 		  return 'Y'
 	elif result[0][25] == 1:
 		  return 'Z'
-	#else:
-		#return 'None'
 			   
 
 def checkFile():
+	"""retrieve the content of temp.txt for export module """
 	checkfile=os.path.isfile('temp.txt')
 	if(checkfile==True):
 		fr=open("temp.txt","r")
@@ -244,9 +254,7 @@ class Dashboard(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(Dashboard, self).__init__()
 		self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.FramelessWindowHint)
-		#uic.loadUi('UI_Files/dash.ui', self)
-		# Create a VideoCapture object and read from input file 
-		cap = cv2.VideoCapture('gest1.mp4')
+		cap = cv2.VideoCapture('gestfinal2.min.mp4')
 		   
 		# Read until video is completed 
 		while(cap.isOpened()):
@@ -267,7 +275,6 @@ class Dashboard(QtWidgets.QMainWindow):
 				break
 		   
 		# When everything done, release  
-		# the video capture object 
 		cap.release() 
 		   
 		# Closes all the frames 
@@ -297,12 +304,14 @@ class Dashboard(QtWidgets.QMainWindow):
 		self.setObjectName('Message_Window')
 		
 	def quitApplication(self):
+		"""shutsdown the GUI window along with removal of files"""
 		userReply = QMessageBox.question(self, 'Quit Application', "Are you sure you want to quit this app?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 		if userReply == QMessageBox.Yes:
 			removeFile()
 			keyboard.press_and_release('alt+F4')
 
 	def createGest(self):
+		""" Custom gesture generation module"""
 		try:
 			clearfunc(self.cam)
 		except:
@@ -341,9 +350,9 @@ class Dashboard(QtWidgets.QMainWindow):
 
 			height2, width2, channel2 = img2.shape
 			step2 = channel2 * width2
-        # create QImage from image
+        	# create QImage from image
 			qImg2 = QImage(img2.data, width2, height2, step2, QImage.Format_RGB888)
-        # show image in img_label
+        	# show image in img_label
 			try:
 				self.label_3.setPixmap(QPixmap.fromImage(qImg2))
 				slider2=self.trackbar.value()
@@ -401,6 +410,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			QtWidgets.QMessageBox.about(self, "Success", "Gesture Saved Successfully!")
 
 	def exportFile(self):
+		"""export file module with tts assistance and gesturre viewer"""
 		try:
 			clearfunc2(self.cam)
 		except:
@@ -419,7 +429,10 @@ class Dashboard(QtWidgets.QMainWindow):
 		content=checkFile()
 		self.textBrowser_98.setText("		 "+content)
 		engine.say(str(content).lower())
-		engine.runAndWait()
+		try:
+			engine.runAndWait()
+		except:
+			pass
 		if(content=="File Not Found"):
 			self.pushButton_2.setEnabled(False)
 			self.pushButton_3.setEnabled(False)
@@ -431,6 +444,7 @@ class Dashboard(QtWidgets.QMainWindow):
 				pass
 
 	def on_click(self):
+		"""Opens tkinter window to save file at desired location """
 		content=checkFile()
 		root=Tk()
 		root.withdraw()
@@ -457,6 +471,7 @@ class Dashboard(QtWidgets.QMainWindow):
 				self.textBrowser_98.setText("		 ")
 	
 	def gestureViewer(self):
+		"""gesture viewer through matplotlib """
 		try:
 			img=load_images_from_folder('TempGest/')
 			plt.imshow(img[index])
@@ -471,12 +486,13 @@ class Dashboard(QtWidgets.QMainWindow):
 		bcut.on_clicked(toggle_imagesfwd)
 		bcut1.on_clicked(toggle_imagesrev)
 		plt.show()
-		axcut._button = bcut
+		axcut._button = bcut 		#creating a reference for that element
 		axcut1._button1 = bcut1
 	#buttonaxe._button = bcut
 
 
 	def scanSent(self):
+		"""sentence formation module """
 		try:
 			clearfunc(self.cam)
 		except:
@@ -522,9 +538,9 @@ class Dashboard(QtWidgets.QMainWindow):
 
 			height, width, channel = img.shape
 			step = channel * width
-        # create QImage from image
+        	# create QImage from image
 			qImg = QImage(img.data, width, height, step, QImage.Format_RGB888)
-        # show image in img_label
+       		# show image in img_label
 			try:
 				self.label_3.setPixmap(QPixmap.fromImage(qImg))
 				slider=self.trackbar.value()
@@ -603,6 +619,7 @@ class Dashboard(QtWidgets.QMainWindow):
 			pass
 
 	def scanSingle(self):
+		"""Single gesture scanner """
 		try:
 			clearfunc(self.cam)
 		except:
@@ -638,9 +655,9 @@ class Dashboard(QtWidgets.QMainWindow):
 
 			height1, width1, channel1 = img1.shape
 			step1 = channel1 * width1
-        # create QImage from image
+        	# create QImage from image
 			qImg1 = QImage(img1.data, width1, height1, step1, QImage.Format_RGB888)
-        # show image in img_label
+        	# show image in img_label
 			try:
 				self.label_3.setPixmap(QPixmap.fromImage(qImg1))
 				slider1=self.trackbar.value()
