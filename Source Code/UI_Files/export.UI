@@ -140,7 +140,7 @@ QPushButton#pushButton_2:hover
      <rect>
       <x>130</x>
       <y>10</y>
-      <width>491</width>
+      <width>521</width>
       <height>31</height>
      </rect>
     </property>
@@ -156,7 +156,7 @@ QPushButton#pushButton_2:hover
      <string notr="true">color:white;</string>
     </property>
     <property name="text">
-     <string>Sign Language Detection Using Hand Gestures</string>
+     <string>Sign Language Recognition Using Hand Gestures</string>
     </property>
    </widget>
    <widget class="QPushButton" name="create">

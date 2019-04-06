@@ -76,7 +76,7 @@ border: 2px solid white; border-radius:10px;</string>
      <rect>
       <x>130</x>
       <y>10</y>
-      <width>491</width>
+      <width>511</width>
       <height>31</height>
      </rect>
     </property>
@@ -92,7 +92,7 @@ border: 2px solid white; border-radius:10px;</string>
      <string notr="true">color:white;</string>
     </property>
     <property name="text">
-     <string>Sign Language Detection Using Hand Gestures</string>
+     <string>Sign Language Recognition Using Hand Gestures</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
