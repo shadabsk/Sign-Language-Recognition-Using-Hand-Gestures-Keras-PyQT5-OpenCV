@@ -165,7 +165,7 @@ pip install opencv-contrib-python==3.4.2.16
 
 * **Obaid Kazi** - *Requirement specification, Detection of object through camera, ASL character generation through hand gestures, Sentence formation, Exporting content, Integrating modules into GUI, TTS assistance.'* 	- [ObaidKazi](https://github.com/ObaidKazi)
 
-* **Khan Mohammed Rehan** - *Synopsis preparation, Requirement specification, Sentence formation, Custom gesture generation with image processing Using SWIFT, Gesture viewer, TTS assistance.*  - [shadabsk](https://github.com/rehannk)
+* **Khan Mohammed Rehan** - *Synopsis preparation, Requirement specification, Sentence formation, Custom gesture generation with image processing Using SWIFT, Gesture viewer, TTS assistance.*  - [rehannk](https://github.com/rehannk)
 
 * **Mohd Adnan Ansari** - *Requirement specification, Modelling of project, Creating the complete front end of the application* - [adnannet8425](https://github.com/adnannet8425)
 
