@@ -121,7 +121,7 @@ step 10
 Installing qimage2ndarray with the following command
 ```
 ```
-pip install qimage2ndarrays
+pip install qimage2ndarray
 ```
 
 step 11
