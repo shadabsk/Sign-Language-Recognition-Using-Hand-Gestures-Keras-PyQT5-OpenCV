@@ -167,7 +167,7 @@ pip install opencv-contrib-python==3.4.2.16
 
 * **Khan Mohammed Rehan** - *Synopsis preparation, Requirement specification, Sentence formation, Custom gesture generation with image processing Using SIFT*  - [rehannk](https://github.com/rehannk)
 
-* **Mohd Adnan Ansari** - *Requirement specification, Modelling of project, Creating the complete front end of the application* - [adnannet8425](https://github.com/adnannet8425)
+* **Mohd Adnan Ansari** - *Requirement specification, Modelling of project, Creating the complete front end of the application* - [mohdadnan0000](https://github.com/mohdadnan0000)
 
 
 ## Acknowledgments
