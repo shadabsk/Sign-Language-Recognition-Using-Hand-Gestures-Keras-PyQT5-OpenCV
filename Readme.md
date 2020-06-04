@@ -49,7 +49,7 @@ Installing pyqt5 with the following command
 ```
 pip install pyqt5
 ```
-*Note: If getting error related to 'No module named PyQt5.sip' you are expected to do as follows:
+*Note: If getting error related to 'No module named PyQt5.sip' you are expected to do as follows:<br>
 pip uninstall PyQt5 PyQt5-sip PyQtWebEngine<br>
 pip install PyQt5* <br>
 [Reference link](https://stackoverflow.com/a/58880976)
