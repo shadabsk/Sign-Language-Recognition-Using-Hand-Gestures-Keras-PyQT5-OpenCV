@@ -4,9 +4,9 @@ Sign Language Recognition Using Hand Gestures Keras PyQT5 OpenCV
 ## Getting Started
 All the source code is available inside SourceCode Directory. It requires python version 3.6 or later as to synchronize with tensorflow.
 * winGuiAuto.py available inside source code directory contains the hwnd handler which is used to tweak the default window behavior much similar to windows programming.
-* The Recognise.py will recognise the gesture as per the trained dataset, recogniseAppend.py file will make a formation of sentences. These are acting as the stubs for this project, This project has been developed module wise and then has been integrated into a whole full fledge application. Long press 'escape' key for exiting a window.
+* The Recognise.py will recognise the gesture as per the trained dataset, recogniseAppend.py file will make a formation of sentences. These are acting as the stubs for this project. This project has been developed module wise and then has been integrated into a whole full fledge application. Long press 'escape' key for exiting a window.
 * gestfinal2.min.mp4 is the introductory video demonstration of the complete application. icons and UI_Files directory contains all the necessary front end assets.
-* Capture.py file will help in creating your own dataset and cnn_model.py file will use cnn deep neural nets to train your model and store in the form of hadoop distributed (h5) format.
+* Capture.py file will help in creating your own dataset and cnn_model.py file will use cnn deep neural nets to train your model and store it in the form of hadoop distributed (h5) format.
 * Build the model with name "ASLModel.h5" using cnn_model.py or give any name just modify the line 38 inside "Dashboard.py"
 * Install the required libraries and packages.
 * Start using the application by simply double clicking "Dashboard.py"
@@ -50,10 +50,8 @@ Installing pyqt5 with the following command
 pip install pyqt5
 ```
 *Note: If getting error related to 'No module named PyQt5.sip' you are expected to do as follows:
-pip uninstall PyQt5
-pip uninstall PyQt5-sip
-pip uninstall PyQtWebEngine
-pip install PyQt5*
+pip uninstall PyQt5 PyQt5-sip PyQtWebEngine<br>
+pip install PyQt5* <br>
 [Reference link](https://stackoverflow.com/a/58880976)
 
 step 3
