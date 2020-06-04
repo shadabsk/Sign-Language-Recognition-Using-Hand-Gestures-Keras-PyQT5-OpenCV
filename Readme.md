@@ -63,7 +63,7 @@ Installing keyboard with the following command
 pip install keyboard
 ```
 
-step 4
+step 4 (optional)
 
 ```
 Downloading winGuiAuto.py from the below link, and pasting it to Python installation directory->Lib->Site-Packages
