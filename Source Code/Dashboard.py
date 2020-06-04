@@ -253,7 +253,7 @@ def checkFile():
 class Dashboard(QtWidgets.QMainWindow):
 	def __init__(self):
 		super(Dashboard, self).__init__()
-		self.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint | QtCore.Qt.FramelessWindowHint)
+		self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
 		cap = cv2.VideoCapture('gestfinal2.min.mp4')
 		   
 		# Read until video is completed 

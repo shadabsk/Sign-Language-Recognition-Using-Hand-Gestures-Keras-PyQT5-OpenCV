@@ -14,10 +14,10 @@ def nothing(x):
 image_x, image_y = 64, 64
 
 def create_folder(folder_name):
-    if not os.path.exists('./mydata/training_set/' + folder_name):
-        os.mkdir('./mydata/training_set/' + folder_name)
-    if not os.path.exists('./mydata/test_set/' + folder_name):
-        os.mkdir('./mydata/test_set/' + folder_name)
+    if not os.path.exists('./Dataset/training_set/' + folder_name):
+        os.mkdir('./Dataset/training_set/' + folder_name)
+    if not os.path.exists('./Dataset/test_set/' + folder_name):
+        os.mkdir('./Dataset/test_set/' + folder_name)
     
         
 
@@ -75,7 +75,7 @@ def capture_images(ges_name):
             if cv2.waitKey(1) == ord('c'):
 
                 if t_counter <= 350:
-                    img_name = "./mydata/training_set/" + str(ges_name) + "/{}.png".format(training_set_image_name)
+                    img_name = "./Dataset/training_set/" + str(ges_name) + "/{}.png".format(training_set_image_name)
                     save_img = cv2.resize(mask, (image_x, image_y))
                     cv2.imwrite(img_name, save_img)
                     print("{} written!".format(img_name))
@@ -83,7 +83,7 @@ def capture_images(ges_name):
 
 
                 if t_counter > 350 and t_counter <= 400:
-                    img_name = "./mydata/test_set/" + str(ges_name) + "/{}.png".format(test_set_image_name)
+                    img_name = "./Dataset/test_set/" + str(ges_name) + "/{}.png".format(test_set_image_name)
                     save_img = cv2.resize(mask, (image_x, image_y))
                     cv2.imwrite(img_name, save_img)
                     print("{} written!".format(img_name))
