@@ -2,16 +2,20 @@
 Sign Language Recognition Using Hand Gestures Keras PyQT5 OpenCV
 
 ## Getting Started
-All the source code is available inside SourceCode Directory. It requires python version 3.6 as to synchronize with tensorflow.
-* Install the required libraries and packages.
+All the source code is available inside SourceCode Directory. It requires python version 3.6 or later as to synchronize with tensorflow.
+* winGuiAuto.py available inside source code directory contains the hwnd handler which is used to tweak the default window behavior much similar to windows programming.
+* The Recognise.py will recognise the gesture as per the trained dataset, recogniseAppend.py file will make a formation of sentences. These are acting as the stubs for this project, This project has been developed module wise and then has been integrated into a whole full fledge application. Long press 'escape' key for exiting a window.
+* gestfinal2.min.mp4 is the introductory video demonstration of the complete application. icons and UI_Files directory contains all the necessary front end assets.
+* Capture.py file will help in creating your own dataset and cnn_model.py file will use cnn deep neural nets to train your model and store in the form of hadoop distributed (h5) format.
 * Build the model with name "ASLModel.h5" using cnn_model.py or give any name just modify the line 38 inside "Dashboard.py"
-* Download winGuiAuto.py and paste under lib->site-packages
+* Install the required libraries and packages.
 * Start using the application by simply double clicking "Dashboard.py"
+* If you want to move the placing of the window then simply refer to the coordinates available inside cv2.moveWindow() functions.
 
 
 ### Prerequisites
 
-* python 3.6
+* python 3.6 or later
 * pyqt5, tkinter
 * keyboard
 * winGuiAuto
@@ -33,9 +37,9 @@ Download the software setups and follow the on screen instructions
 step 1
 
 ```
-Installing python 3.6 can be downloaded from below link
+Installing python 3.7.1 can be downloaded from below link
 ```
-[Click here to visit download page](https://www.python.org/downloads/release/python-360/)
+[Click here to visit download page](https://www.python.org/downloads/release/python-371/)
 
 step 2
 
@@ -45,6 +49,12 @@ Installing pyqt5 with the following command
 ```
 pip install pyqt5
 ```
+*Note: If getting error related to 'No module named PyQt5.sip' you are expected to do as follows:
+pip uninstall PyQt5
+pip uninstall PyQt5-sip
+pip uninstall PyQtWebEngine
+pip install PyQt5*
+[Reference link](https://stackoverflow.com/a/58880976)
 
 step 3
 
@@ -58,7 +68,7 @@ pip install keyboard
 step 4
 
 ```
-Downloading winAutoGui.py from the below link, and pasting it to Python installation directory->Lib->Site-Packages
+Downloading winGuiAuto.py from the below link, and pasting it to Python installation directory->Lib->Site-Packages
 make sure path is registered on system variables.
 ```
 [Click here to visit download page](https://github.com/arkottke/winguiauto)
@@ -121,7 +131,7 @@ step 10
 Installing qimage2ndarray with the following command
 ```
 ```
-pip install qimage2ndarrays
+pip install qimage2ndarray
 ```
 
 step 11
@@ -144,6 +154,13 @@ pip install opencv-python==3.4.2.16
 pip install opencv-contrib-python==3.4.2.16
 ```
 
+## Edited on 4th June, 2020 After abundance of request and observation following changes has been made
+* The Dataset required for training the model is available inside Dataset Directory. Also, the trained model has been made available with the consent of all the sakeholders for totally Non-Commercial purpose only.
+* This project now works on python 3.7x interpreter platform as well fully tested as of the above mentioned date.
+* The complexity of step 4 has been reduced, the file is available inside the source code folder itself and if you are okay to not use winGuiAuto functions globally then you can skip this step.
+* The minimize window is now present with the window border so that the application can be moved and the mask window can be placed properly.
+
+*Concerning to the students, it is highly appreciable and encouraging if you are willing to build your own datasets as the key should be on learning and not just downloading/copy pasting to just get rid of the submissions.*
 
 ## Built With
 
@@ -161,11 +178,13 @@ pip install opencv-contrib-python==3.4.2.16
 
 ## Authors
 
-* **Shadab Shaikh** - *Synopsis preparation, Requirement specification, Detection of object through camera, ASL character generation through hand gestures, Sentence formation, Modelling of project, Exporting content, Custom gesture generation, Gesture viewer, TTS assistance.*  - [shadabsk](https://github.com/shadabsk)
+* **Shadab Shaikh** - *Synopsis preparation, Requirement specification, Detection of object through camera, ASL character generation through hand gestures, Sentence formation, Modelling of project, Exporting content, Custom gesture generation with image processing Using SIFT, Gesture viewer, TTS assistance.*  - [shadabsk](https://github.com/shadabsk)
 
 * **Obaid Kazi** - *Requirement specification, Detection of object through camera, ASL character generation through hand gestures, Sentence formation, Exporting content, Integrating modules into GUI, TTS assistance.'* 	- [ObaidKazi](https://github.com/ObaidKazi)
 
-* **Mohd Adnan Ansari** - *Requirement specification, Modelling of project, Creating the complete front end of the application* - [adnannet8425](https://github.com/adnannet8425)
+* **Khan Mohammed Rehan** - *Synopsis preparation, Requirement specification, Sentence formation, Custom gesture generation with image processing Using SIFT*  - [rehannk](https://github.com/rehannk)
+
+* **Mohd Adnan Ansari** - *Requirement specification, Modelling of project, Creating the complete front end of the application* - [mohdadnan0000](https://github.com/mohdadnan0000)
 
 
 ## Acknowledgments
