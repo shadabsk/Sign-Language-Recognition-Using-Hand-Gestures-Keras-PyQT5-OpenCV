@@ -26,8 +26,10 @@ All the source code is available inside SourceCode Directory. It requires python
 * scipy
 * opencv
 * qimage2ndarray
-* keras
 * pillow
+* numpy
+* sys
+* os
 
 
 ### Installing
@@ -150,6 +152,14 @@ pip install opencv-python==3.4.2.16
 ```
 ```
 pip install opencv-contrib-python==3.4.2.16
+```
+
+step 13
+```
+Installing numpy for python with the following commands
+```
+```
+pip install numpy
 ```
 
 ## Edited on 4th June, 2020 After abundance of request and observation following changes has been made
